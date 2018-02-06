@@ -295,7 +295,7 @@ function initializePlay(){
                             actionResume);
     let resumeText = new PIXI.Text("Resume", SMALL_BTN_TXT_STYLE);
     resumeText.anchor.set(0.5,0.5);
-    resumeText.position.set(resumeBtn.width, resumeBtn.height);
+    resumeText.position.set(resumeBtn.x, resumeBtn.y);
     
     restartBtn = new PIXI.Sprite(id[ASSET_BUTTON_UP]);
     restartBtn.anchor.set(0.5, 0.5);
@@ -307,6 +307,7 @@ function initializePlay(){
                             actionRestart);
     let restartText = new PIXI.Text("Restart", SMALL_BTN_TXT_STYLE);
     restartText.anchor.set(0.5,0.5);
+    restartText.position.set(restartBtn.x, restartBtn.y);
     
     quitBtn = new PIXI.Sprite(id[ASSET_BUTTON_UP]);
     quitBtn.anchor.set(0.5, 0.5);
@@ -316,20 +317,28 @@ function initializePlay(){
                             id[ASSET_BUTTON_DOWN],
                             id[ASSET_BUTTON_UP],
                             actionQuit);
+    let quitText = new PIXI.Text("Quit", SMALL_BTN_TXT_STYLE);
+    quitText.anchor.set(0.5,0.5);
+    quitText.position.set(quitBtn.x, quitBtn.y);
     
     pauseContainer = new PIXI.Container();
     pauseContainer.position.set(gameWidth/2, gameHeight/2);
     
 
 
-
+    let pauseText = new PIXI.Text("Paused", SMALL_BTN_TXT_STYLE);
+    pauseText.anchor.set(0.5,0.5);
+    pauseText.position.set(0, -(resumeBtn.height*2) - 7);
     
     
     pauseContainer.addChild(pauseMenu);
     pauseContainer.addChild(resumeBtn);
     pauseContainer.addChild(resumeText);
     pauseContainer.addChild(restartBtn);
+    pauseContainer.addChild(restartText);
     pauseContainer.addChild(quitBtn);
+    pauseContainer.addChild(quitText)
+    pauseContainer.addChild(pauseText);
     pauseContainer.scale.set(0,0);
     
     playScene.addChild(pauseContainer);
