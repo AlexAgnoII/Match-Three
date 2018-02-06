@@ -34,10 +34,14 @@ let app = new PIXI.Application({
   }
 );
 
-let state;
+let state,
+    id;
 
 //title
-let titleScene;
+let titleScene,
+    titleBG,
+    titleLogo,
+    largeButton;
 
 //play
 let playScene;
@@ -48,12 +52,10 @@ let endScene;
 gameDiv.appendChild(app.view);
 PIXI.loader
 .add(MATCH_THREE_ATLAS)
-.on("progress", loadProgressHandler)
 .load(setup);
-setup();
-
 
 function setup() {
+    id = PIXI.loader.resources[MATCH_THREE_ATLAS].textures; 
     
     initializeTitle();
     initializePlay();
@@ -64,7 +66,7 @@ function setup() {
 }
 
 function gameLoop(delta) {
-    
+    state();
 }
 
 function title(){
@@ -73,9 +75,9 @@ function title(){
 
 function initializeTitle() {
     titleScene = new PIXI.Container();
-    app.stage.appendChild(titleScene);
-    
-    
+    app.stage.addChild(titleScene);
+
+    console.log("wtf?")
     
 }
 
