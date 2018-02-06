@@ -56,7 +56,13 @@ const LARGE_BTN_TEXT_STYLE = new PIXI.TextStyle({
 });
 
 //play
-let playScene;
+let playScene,
+    playBG,
+    pauseBtn,
+    scoreText,
+    scoreVal,
+    timeText,
+    timeVal;
 
 //end
 let endScene;
@@ -108,17 +114,11 @@ function title(){
             }
             
         }
-            
-            
-
     }
 }
 
 function initializeTitle() {
     let action = () => {
-        console.log("Play");
-        state = play;
-        
         //set Button to active = false
         editButtonActive(largeButton, false);
         
@@ -129,9 +129,10 @@ function initializeTitle() {
         charm.fadeOut(titleScene, 30).onComplete = () => {
            //Return scale of elements back to 0
            titleLogo.scale.set(0,0);
+           titleScene.visible = false;
             
-            //go to next scene.
-            state = play;
+           //go to next scene.
+           state = play;
         }
     }
     
@@ -172,12 +173,46 @@ function initializeTitle() {
 }
 
 function play(){
-    
-    playScene = new PIXI.Container();
+    if(playScene.visible == false) {
+        playScene.visible = true;
+        
+        charm.fadeIn(playScene, 30).onComplete = () => {
+            editButtonActive(pauseBtn, true);
+        };
+    }
     
     
 }
-function initializePlay(){}
+
+function initializePlay(){
+    let actionPause = () => {
+        console.log("Pause!")
+    };
+    let actionPressGem;
+    
+    playScene = new PIXI.Container();
+    playScene.alpha = 0;
+    app.stage.addChild(playScene);
+    
+    playBG = new PIXI.Sprite(id[ASSET_BG]);
+    playBG.position.set(gameWidth/2, gameHeight/2);
+    playBG.anchor.set(0.5,0.5);    
+    playScene.addChild(playBG);
+    
+    pauseBtn = new PIXI.Sprite(id[ASSET_PAUSE_UP]);
+    pauseBtn.position.set(((gameWidth/2) + (pauseBtn.width * 4)) - 10, pauseBtn.height - pauseBtn.height/4);
+    pauseBtn.anchor.set(0.5,0.5);
+    playScene.addChild(pauseBtn);
+    
+    editButtonActive(pauseBtn, false);
+    addButtonActionListener(pauseBtn, 
+                            id[ASSET_PAUSE_DOWN],
+                            id[ASSET_PAUSE_UP],
+                            actionPause);
+    
+    playScene.visible = false;
+}
+
 function end(){}
 function initializeEnd(){}
 
