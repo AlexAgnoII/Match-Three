@@ -116,6 +116,20 @@ function title(){
 function initializeTitle() {
     let action = () => {
         console.log("Play");
+        state = play;
+        
+        //set Button to active = false
+        editButtonActive(largeButton, false);
+        
+        //fadeout title Scene
+        charm.fadeOut(titleScene, 30).onComplete = () => {
+           //Return scale of elements back to 0
+           titleLogo.scale.set(0,0);
+           largeButtonGroup.scale.set(0,0);
+            
+            //go to next scene.
+            state = play;
+        }
     }
     
     titleScene = new PIXI.Container();
@@ -143,9 +157,7 @@ function initializeTitle() {
                             id[ASSET_LARGE_BTN_DOWN],
                             id[ASSET_LARGE_BTN_UP],
                             action);
-    
-    
-    
+
     largeButtonGroup = new PIXI.Container();
     largeButtonGroup.addChild(largeButton);
     largeButtonGroup.addChild(text);
@@ -154,7 +166,6 @@ function initializeTitle() {
     titleScene.addChild(largeButtonGroup);
 
     titleScene.visible = false;
-
 }
 
 function play(){}
