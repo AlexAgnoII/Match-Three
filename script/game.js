@@ -43,6 +43,7 @@ let titleScene,
     titleLogo,
     largeButton,
     largeButtonGroup;
+
 const LARGE_BTN_TEXT_STYLE = new PIXI.TextStyle({
     align: "center",
     fill: "white",
@@ -121,11 +122,13 @@ function initializeTitle() {
         //set Button to active = false
         editButtonActive(largeButton, false);
         
+        //scale button back to zero animation
+        charm.scale(largeButtonGroup,1.1,1.1, 5).onComplete = () =>
+        charm.scale(largeButtonGroup, 0,0, 10).onComplete = () =>
         //fadeout title Scene
         charm.fadeOut(titleScene, 30).onComplete = () => {
            //Return scale of elements back to 0
            titleLogo.scale.set(0,0);
-           largeButtonGroup.scale.set(0,0);
             
             //go to next scene.
             state = play;
@@ -168,7 +171,12 @@ function initializeTitle() {
     titleScene.visible = false;
 }
 
-function play(){}
+function play(){
+    
+    playScene = new PIXI.Container();
+    
+    
+}
 function initializePlay(){}
 function end(){}
 function initializeEnd(){}
