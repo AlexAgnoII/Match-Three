@@ -69,6 +69,12 @@ let endScene,
     endGameMenu,
     endGameContainer;
 
+//timer
+let time = 0;
+let minuteElapse = 0;
+let ctr = 0;
+let timerOn = false;
+
 
 
 let charm = new Charm();
@@ -181,9 +187,13 @@ function play(){
         
         charm.fadeIn(playScene, 30).onComplete = () => {
             editButtonActive(pauseBtn, true);
+            timerOn = true;
         };
     }
     
+    if(timerOn) {
+        timer();
+    }
     
 }
 
@@ -193,6 +203,7 @@ function initializePlay(){
     let actionPause = () => {
         blackBackground.alpha = 0.5
         editButtonActive(pauseBtn, false);
+        timerOn = false;
         
         charm.scale(pauseContainer, 1.1, 1.1, 5).onComplete = () =>
         charm.scale(pauseContainer, 1, 1, 5).onComplete = () => {
@@ -215,14 +226,20 @@ function initializePlay(){
            editButtonActive(restartBtn, false);
            editButtonActive(quitBtn, false);
            editButtonActive(pauseBtn, true);
+           timerOn = true;
         }
     }
     
-    let actionRestart = () => {
+    let actionRestart = () => { //reseting required here
+        charm.scale(pauseContainer, 1.1, 1.1, 5).onComplete = () =>
+        charm.scale(pauseContainer, 0, 0, 5).onComplete = () => {
+            blackBackground.alpha = 0;
+            state = play;
+        };
         console.log("restart");
     }
     
-    let actionQuit = () => {
+    let actionQuit = () => {//reseting required here
         charm.scale(pauseContainer, 1.1, 1.1, 5).onComplete = () =>
         charm.scale(pauseContainer, 0, 0, 5).onComplete = () => {
            blackBackground.alpha = 0;  
@@ -317,7 +334,16 @@ function initializePlay(){
     });
     
     playScene.addChild(testButton);
-
+    
+    timeText = new PIXI.Text("Time remaining: ", createTextStyle(15, "white"));
+    timeText.anchor.set(0.5,0.5);
+    timeText.position.set(pauseBtn.x - pauseBtn.width * 3, pauseBtn.y);
+    playScene.addChild(timeText);
+    
+    timeVal = new PIXI.Text("0:00", createTextStyle(15, "white"));
+    timeVal.anchor.set(0.5,0.5);
+    timeVal.position.set(pauseBtn.x - pauseBtn.width - pauseBtn.width/4, pauseBtn.y);
+    playScene.addChild(timeVal);
 
     playScene.visible = false;
 }
@@ -357,7 +383,7 @@ function end(){
     }
 }
 function initializeEnd(){
-    let acionEndQuit = () => {
+    let acionEndQuit = () => {//reseting required here
         console.log("quit");
         editButtonActive(endRestartBtn, false);
         editButtonActive(endQuitBtn, false);
@@ -371,7 +397,7 @@ function initializeEnd(){
             state = title;
         };
     };
-    let actionRestart = () => {
+    let actionRestart = () => {//reseting required here
         console.log("restart")
         editButtonActive(endRestartBtn, false);
         editButtonActive(endQuitBtn, false);
@@ -468,27 +494,25 @@ function createTextStyle(sizeOfFont,
             });
 }
 
-//let time = 0;
-//let minuteElapse = 0;
-//let ctr = 0;
-//
-//function timer() {
-//    ctr++;
-//    if(ctr == 60) {
-//        time++;
-//        //console.log(time);
-//        ctr = 0;
-//        
-//        if(time < 10) {
-//            timeText.text = minuteElapse + ":0" + time; 
-//        }
-//        else if(time < 60) {
-//            timeText.text = minuteElapse + ":" + time;
-//        }
-//        else {
-//            minuteElapse++;
-//            time = 0;
-//            timeText.text = minuteElapse + ":00";
-//        }
-//    }
-//}
+
+
+function timer() {
+    ctr++;
+
+    if(ctr == 60) {
+        time++;
+        ctr = 0;
+            console.log(time);
+        if(time < 10) {
+            timeVal.text = minuteElapse + ":0" + time; 
+        }
+        else if(time < 60) {
+            timeVal.text = minuteElapse + ":" + time;
+        }
+        else {
+            minuteElapse++;
+            time = 0;
+            timeVal.text = minuteElapse + ":00";
+        }
+    }
+}
