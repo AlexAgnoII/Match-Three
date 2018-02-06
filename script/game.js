@@ -159,7 +159,6 @@ function initializeTitle() {
     largeButton.anchor.set(0.5,0.5);
     let text = new PIXI.Text("Start Game", createTextStyle(30, "white"));
     text.anchor.set(0.5,0.5);
-    
     editButtonActive(largeButton, false);
     addButtonActionListener(largeButton, 
                             id[ASSET_LARGE_BTN_DOWN],
@@ -451,7 +450,8 @@ function addButtonActionListener(button,
 
     button
     .on("pointerdown", () => buttonDown(button, textureDown))
-    .on("pointerup", () => buttonUp(button, textureUp, action));
+    .on("pointerup", () => buttonUp(button, textureUp, action))
+    .on("pointerout", () => {button.texture = textureUp});
 }
 
 function createTextStyle(sizeOfFont,
