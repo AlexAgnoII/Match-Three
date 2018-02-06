@@ -55,6 +55,17 @@ const LARGE_BTN_TEXT_STYLE = new PIXI.TextStyle({
     stroke: "white"
 });
 
+const SMALL_BTN_TXT_STYLE = new PIXI.TextStyle({
+    align: "center",
+    fill: "white",
+    fillGradientType: 1,
+    fontFamily: "Arial, Helvetica, sans-serif",
+    fontSize: 20,
+    fontWeight: "bold",
+    lineJoin: "round",
+    stroke: "white"
+});
+
 //play
 let playScene,
     playBG,
@@ -194,6 +205,7 @@ function play(){
 function initializePlay(){
     let actionPause = () => {
         blackBackground.alpha = 0.5
+        editButtonActive(pauseBtn, false);
         
         charm.scale(pauseContainer, 1.1, 1.1, 5).onComplete = () =>
         charm.scale(pauseContainer, 1, 1, 5).onComplete = () => {
@@ -207,7 +219,6 @@ function initializePlay(){
         
     };
     let actionResume = () => {
-        
         charm.scale(pauseContainer, 1.1, 1.1, 5).onComplete = () =>
         charm.scale(pauseContainer, 0, 0, 5).onComplete = () => {
            blackBackground.alpha = 0;  
@@ -215,12 +226,14 @@ function initializePlay(){
            editButtonActive(resumeBtn, false);
            editButtonActive(restartBtn, false);
            editButtonActive(quitBtn, false);
+           editButtonActive(pauseBtn, true);
         }
     }
     
     let actionRestart = () => {
         console.log("restart");
     }
+    
     let actionQuit = () => {
         charm.scale(pauseContainer, 1.1, 1.1, 5).onComplete = () =>
         charm.scale(pauseContainer, 0, 0, 5).onComplete = () => {
@@ -273,23 +286,31 @@ function initializePlay(){
     pauseMenu.anchor.set(0.5,0.5);
     
     resumeBtn = new PIXI.Sprite(id[ASSET_BUTTON_UP]);
-    resumeBtn.anchor.set(0,0);
+    resumeBtn.anchor.set(0.5,0.5);
+    resumeBtn.position.set(0, -resumeBtn.height + resumeBtn.height/2 - 5);
     editButtonActive(resumeBtn, false);
     addButtonActionListener(resumeBtn, 
                             id[ASSET_BUTTON_DOWN],
                             id[ASSET_BUTTON_UP],
                             actionResume);
+    let resumeText = new PIXI.Text("Resume", SMALL_BTN_TXT_STYLE);
+    resumeText.anchor.set(0.5,0.5);
+    resumeText.position.set(resumeBtn.width, resumeBtn.height);
     
     restartBtn = new PIXI.Sprite(id[ASSET_BUTTON_UP]);
-    restartBtn.anchor.set(0.0);
+    restartBtn.anchor.set(0.5, 0.5);
+    restartBtn.position.set(0, restartBtn.height/2 + restartBtn.height/4 - 7);
     editButtonActive(restartBtn, false);
     addButtonActionListener(restartBtn, 
                             id[ASSET_BUTTON_DOWN],
                             id[ASSET_BUTTON_UP],
                             actionRestart);
+    let restartText = new PIXI.Text("Restart", SMALL_BTN_TXT_STYLE);
+    restartText.anchor.set(0.5,0.5);
     
     quitBtn = new PIXI.Sprite(id[ASSET_BUTTON_UP]);
-    quitBtn.anchor.set(0,0);
+    quitBtn.anchor.set(0.5, 0.5);
+    quitBtn.position.set(0, quitBtn.height*2 - 10);
     editButtonActive(quitBtn, false);
     addButtonActionListener(quitBtn,
                             id[ASSET_BUTTON_DOWN],
@@ -299,13 +320,14 @@ function initializePlay(){
     pauseContainer = new PIXI.Container();
     pauseContainer.position.set(gameWidth/2, gameHeight/2);
     
-    resumeBtn.position.set(-resumeBtn.width/2, -resumeBtn.height - 5);
-    restartBtn.position.set(-restartBtn.width/2, 3);
-    quitBtn.position.set(-quitBtn.width/2, resumeBtn.height + 10);
+
+
+
     
     
     pauseContainer.addChild(pauseMenu);
     pauseContainer.addChild(resumeBtn);
+    pauseContainer.addChild(resumeText);
     pauseContainer.addChild(restartBtn);
     pauseContainer.addChild(quitBtn);
     pauseContainer.scale.set(0,0);
