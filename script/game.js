@@ -347,7 +347,7 @@ function setMenuButtons(button,
 function end(){
     if(endScene.visible == false) {
         endScene.visible = true;
-        
+        console.log(endGameContainer.y)
         charm.slide(endGameContainer, (endGameContainer.x), (gameHeight/2 + 15), 15).onComplete = () => 
         charm.slide(endGameContainer, (endGameContainer.x), (gameHeight/2), 15).onComplete = () => {
             console.log("end") 
@@ -359,10 +359,29 @@ function end(){
 }
 function initializeEnd(){
     let acionEndQuit = () => {
-        console.log("quit")
+        console.log("quit");
+        editButtonActive(endRestartBtn, false);
+        editButtonActive(endQuitBtn, false);
+        charm.slide(endGameContainer, endGameContainer.x, (gameHeight/2 + 15), 15).onComplete = () => 
+        charm.slide(endGameContainer, endGameContainer.x, -SPRITE_OFF_SET, 15).onComplete = () => 
+        charm.fadeOut(playScene, 30).onComplete = () => {
+            blackBackground.alpha = 0;
+            state = title;
+            playScene.visible = false;
+            endScene.visible = false;
+            state = title;
+        };
     };
     let actionRestart = () => {
         console.log("restart")
+        editButtonActive(endRestartBtn, false);
+        editButtonActive(endQuitBtn, false);
+        charm.slide(endGameContainer, endGameContainer.x, (gameHeight/2 + 15), 15).onComplete = () => 
+        charm.slide(endGameContainer, endGameContainer.x, -SPRITE_OFF_SET, 15).onComplete = () => {
+            blackBackground.alpha = 0;
+            endScene.visible = false;
+            state = play;
+        };
     };
     
     endScene = new PIXI.Container();
