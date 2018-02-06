@@ -46,28 +46,6 @@ let titleScene,
     largeButton,
     largeButtonGroup;
 
-const LARGE_BTN_TEXT_STYLE = new PIXI.TextStyle({
-    align: "center",
-    fill: "white",
-    fillGradientType: 1,
-    fontFamily: "Arial, Helvetica, sans-serif",
-    fontSize: 30,
-    fontWeight: "bold",
-    lineJoin: "round",
-    stroke: "white"
-});
-
-const SMALL_BTN_TXT_STYLE = new PIXI.TextStyle({
-    align: "center",
-    fill: "white",
-    fillGradientType: 1,
-    fontFamily: "Arial, Helvetica, sans-serif",
-    fontSize: 20,
-    fontWeight: "bold",
-    lineJoin: "round",
-    stroke: "white"
-});
-
 //play
 let playScene,
     playBG,
@@ -90,6 +68,7 @@ let endScene,
     endScoreVal,
     endGameMenu,
     endGameContainer;
+
 
 
 let charm = new Charm();
@@ -178,7 +157,7 @@ function initializeTitle() {
     
     largeButton = new PIXI.Sprite(id[ASSET_LARGE_BTN_UP]);
     largeButton.anchor.set(0.5,0.5);
-    let text = new PIXI.Text("Start Game", LARGE_BTN_TEXT_STYLE);
+    let text = new PIXI.Text("Start Game", createTextStyle(30, "white"));
     text.anchor.set(0.5,0.5);
     
     editButtonActive(largeButton, false);
@@ -321,9 +300,9 @@ function initializePlay(){
                        "Quit",
                         pauseContainer);
 
-    let pauseText = new PIXI.Text("Paused", SMALL_BTN_TXT_STYLE);
+    let pauseText = new PIXI.Text("Paused", createTextStyle(20, "white"));
     pauseText.anchor.set(0.5,0.5);
-    pauseText.position.set(0, -(resumeBtn.height*2) - 7);
+    pauseText.position.set(0, -(pauseText.height*5) + 5);
     pauseContainer.addChild(pauseText);
     
     let testButton = new PIXI.Sprite(id[ASSET_BUTTON_UP]);
@@ -357,7 +336,7 @@ function setMenuButtons(button,
                             id[ASSET_BUTTON_DOWN],
                             id[ASSET_BUTTON_UP],
                             action);
-    let text = new PIXI.Text(txt, SMALL_BTN_TXT_STYLE);
+    let text = new PIXI.Text(txt, createTextStyle(20, "white"));
     text.anchor.set(0.5,0.5);
     text.position.set(button.x, button.y);
     
@@ -412,6 +391,21 @@ function initializeEnd(){
                    endGameContainer);
     
     
+    let endText = new PIXI.Text("Game Over", createTextStyle(20, "white"));
+    endText.anchor.set(0.5,0.5);
+    endText.position.set(0, -(endText.height*5));
+    endGameContainer.addChild(endText);
+    
+    let endTotalScoreText = new PIXI.Text("Total Score", createTextStyle(20, "yellow"));
+    endTotalScoreText.anchor.set(0.5,0.5);
+    endTotalScoreText.position.set(0,-(endTotalScoreText.height*2) - endTotalScoreText.height/2);
+    endGameContainer.addChild(endTotalScoreText);
+    
+    endScoreVal= new PIXI.Text("99999", createTextStyle(40, "white"));
+    endScoreVal.anchor.set(0.5,0.5);
+    endScoreVal.position.set(0, -(endScoreVal.height/2));
+    endGameContainer.addChild(endScoreVal);
+    
     
     endScene.visible = false;
 }
@@ -439,6 +433,20 @@ function addButtonActionListener(button,
     button
     .on("pointerdown", () => buttonDown(button, textureDown))
     .on("pointerup", () => buttonUp(button, textureUp, action));
+}
+
+function createTextStyle(sizeOfFont,
+                         colorOfFont) {
+    return new PIXI.TextStyle({
+                align: "center",
+                fill: colorOfFont,
+                fillGradientType: 1,
+                fontFamily: "Arial, Helvetica, sans-serif",
+                fontSize: sizeOfFont,
+                fontWeight: "bold",
+                lineJoin: "round",
+                stroke: "white"
+            });
 }
 
 //let time = 0;
