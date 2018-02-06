@@ -271,12 +271,22 @@ function initializePlay(){
     pauseBtn.position.set(((gameWidth/2) + (pauseBtn.width * 4)) - 10, pauseBtn.height - pauseBtn.height/4);
     pauseBtn.anchor.set(0.5,0.5);
     playScene.addChild(pauseBtn);
-    
     editButtonActive(pauseBtn, false);
     addButtonActionListener(pauseBtn, 
                             id[ASSET_PAUSE_DOWN],
                             id[ASSET_PAUSE_UP],
                             actionPause);
+
+        
+    timeText = new PIXI.Text("Time remaining: ", createTextStyle(15, "white"));
+    timeText.anchor.set(0.5,0.5);
+    timeText.position.set(pauseBtn.x - pauseBtn.width * 3, pauseBtn.y);
+    playScene.addChild(timeText);
+    
+    timeVal = new PIXI.Text("0:00", createTextStyle(15, "white"));
+    timeVal.anchor.set(0.5,0.5);
+    timeVal.position.set(pauseBtn.x - pauseBtn.width - pauseBtn.width/4, pauseBtn.y);
+    playScene.addChild(timeVal);
     
     blackBackground = new PIXI.Graphics();
     blackBackground.drawRect((gameWidth/2) - (playBG.width/2), 
@@ -334,16 +344,6 @@ function initializePlay(){
     });
     
     playScene.addChild(testButton);
-    
-    timeText = new PIXI.Text("Time remaining: ", createTextStyle(15, "white"));
-    timeText.anchor.set(0.5,0.5);
-    timeText.position.set(pauseBtn.x - pauseBtn.width * 3, pauseBtn.y);
-    playScene.addChild(timeText);
-    
-    timeVal = new PIXI.Text("0:00", createTextStyle(15, "white"));
-    timeVal.anchor.set(0.5,0.5);
-    timeVal.position.set(pauseBtn.x - pauseBtn.width - pauseBtn.width/4, pauseBtn.y);
-    playScene.addChild(timeVal);
 
     playScene.visible = false;
 }
