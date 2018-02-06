@@ -1,0 +1,165 @@
+{"frames": {
+
+"asset_bg.png":
+{
+	"frame": {"x":326,"y":127,"w":600,"h":550},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":600,"h":550},
+	"sourceSize": {"w":600,"h":550},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"asset_button_down.png":
+{
+	"frame": {"x":404,"y":0,"w":112,"h":51},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":112,"h":51},
+	"sourceSize": {"w":112,"h":51},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"asset_button_up.png":
+{
+	"frame": {"x":516,"y":0,"w":112,"h":51},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":112,"h":51},
+	"sourceSize": {"w":112,"h":51},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"asset_gameover_popup.png":
+{
+	"frame": {"x":163,"y":127,"w":163,"h":290},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":163,"h":290},
+	"sourceSize": {"w":163,"h":290},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"asset_gem1.png":
+{
+	"frame": {"x":0,"y":0,"w":50,"h":50},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":50,"h":50},
+	"sourceSize": {"w":50,"h":50},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"asset_gem2.png":
+{
+	"frame": {"x":50,"y":0,"w":50,"h":50},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":50,"h":50},
+	"sourceSize": {"w":50,"h":50},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"asset_gem3.png":
+{
+	"frame": {"x":150,"y":0,"w":50,"h":50},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":50,"h":50},
+	"sourceSize": {"w":50,"h":50},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"asset_gem4.png":
+{
+	"frame": {"x":200,"y":0,"w":50,"h":50},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":50,"h":50},
+	"sourceSize": {"w":50,"h":50},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"asset_gem5.png":
+{
+	"frame": {"x":250,"y":0,"w":50,"h":50},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":50,"h":50},
+	"sourceSize": {"w":50,"h":50},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"asset_gem6.png":
+{
+	"frame": {"x":100,"y":0,"w":50,"h":50},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":50,"h":50},
+	"sourceSize": {"w":50,"h":50},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"asset_large_btn_down.png":
+{
+	"frame": {"x":491,"y":51,"w":217,"h":76},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":217,"h":76},
+	"sourceSize": {"w":217,"h":76},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"asset_large_btn_up.png":
+{
+	"frame": {"x":708,"y":51,"w":217,"h":76},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":217,"h":76},
+	"sourceSize": {"w":217,"h":76},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"asset_pause_down.png":
+{
+	"frame": {"x":352,"y":0,"w":52,"h":51},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":52,"h":51},
+	"sourceSize": {"w":52,"h":51},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"asset_pause_menu.png":
+{
+	"frame": {"x":0,"y":127,"w":163,"h":277},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":163,"h":277},
+	"sourceSize": {"w":163,"h":277},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"asset_pause_up.png":
+{
+	"frame": {"x":300,"y":0,"w":52,"h":51},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":52,"h":51},
+	"sourceSize": {"w":52,"h":51},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"asset_title.png":
+{
+	"frame": {"x":0,"y":51,"w":491,"h":75},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":491,"h":75},
+	"sourceSize": {"w":491,"h":75},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"asset_title_bg.png":
+{
+	"frame": {"x":0,"y":677,"w":600,"h":550},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":600,"h":550},
+	"sourceSize": {"w":600,"h":550},
+	"pivot": {"x":0.5,"y":0.5}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "matchthree.png",
+	"format": "RGBA8888",
+	"size": {"w":926,"h":1227},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:1298bed2803786ff2bb85395d97fc166:8bd59e673bf97b3129fd28cf6776381f:b85f470f06f1d67b731f3fe40c80fa27$"
+}
+}
