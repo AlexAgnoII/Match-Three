@@ -25,6 +25,8 @@ const ASSET_PAUSE_DOWN = "asset_pause_down.png";
 const ASSET_TITLE = "asset_title.png";
 const ASSET_TITLE_BG = "asset_title_bg.png";
 
+const SPRITE_OFF_SET = 1000;
+
 let app = new PIXI.Application({ 
     width: 800, 
     height: 800,                       
@@ -82,7 +84,12 @@ let playScene,
     quitBtn;
 
 //end
-let endScene;
+let endScene,
+    endRestartBtn,
+    endQuitBtn,
+    endScoreVal,
+    endGameMenu,
+    endGameContainer;
 
 
 let charm = new Charm();
@@ -202,6 +209,8 @@ function play(){
     
 }
 
+
+
 function initializePlay(){
     let actionPause = () => {
         blackBackground.alpha = 0.5
@@ -218,6 +227,7 @@ function initializePlay(){
         
         
     };
+    
     let actionResume = () => {
         charm.scale(pauseContainer, 1.1, 1.1, 5).onComplete = () =>
         charm.scale(pauseContainer, 0, 0, 5).onComplete = () => {
@@ -283,6 +293,7 @@ function initializePlay(){
 
     pauseContainer = new PIXI.Container();
     pauseContainer.position.set(gameWidth/2, gameHeight/2);
+    pauseContainer.scale.set(0,0);
     playScene.addChild(pauseContainer);
 
     pauseMenu = new PIXI.Sprite(id[ASSET_PAUSE_MENU]);
@@ -290,37 +301,54 @@ function initializePlay(){
     pauseContainer.addChild(pauseMenu);
         
     resumeBtn = new PIXI.Sprite(id[ASSET_BUTTON_UP]);
-    setPauseMenuButton(resumeBtn, 
+    setMenuButtons(resumeBtn, 
                        (-resumeBtn.height) + (resumeBtn.height/2) - 5,
                        actionResume,
-                       "Resume");
+                       "Resume",
+                       pauseContainer);
     
     restartBtn = new PIXI.Sprite(id[ASSET_BUTTON_UP]);
-    setPauseMenuButton(restartBtn,
+    setMenuButtons(restartBtn,
                       (restartBtn.height/2) + (restartBtn.height/4) - 7,
                        actionRestart,
-                        "Restart");
+                        "Restart",
+                       pauseContainer);
     
     quitBtn = new PIXI.Sprite(id[ASSET_BUTTON_UP]);
-    setPauseMenuButton(quitBtn,
+    setMenuButtons(quitBtn,
                       (quitBtn.height*2) - 10,
                        actionQuit,
-                       "Quit");
+                       "Quit",
+                        pauseContainer);
 
     let pauseText = new PIXI.Text("Paused", SMALL_BTN_TXT_STYLE);
     pauseText.anchor.set(0.5,0.5);
     pauseText.position.set(0, -(resumeBtn.height*2) - 7);
-
     pauseContainer.addChild(pauseText);
-    pauseContainer.scale.set(0,0);
+    
+    let testButton = new PIXI.Sprite(id[ASSET_BUTTON_UP]);
+    testButton.interactive = true;
+    testButton.buttonMode = true;
+    
+    testButton.on("pointerdown", () => {
+
+        //End scenario happens here
+       blackBackground.alpha = 0.5;
+       state = end;
+        
+    });
+    
+    playScene.addChild(testButton);
+
 
     playScene.visible = false;
 }
 
-function setPauseMenuButton(button,
+function setMenuButtons(button,
                             height,
                             action,
-                            txt) {
+                            txt,
+                            container) {
 
     button.anchor.set(0.5,0.5);
     button.position.set(0, height);
@@ -333,14 +361,60 @@ function setPauseMenuButton(button,
     text.anchor.set(0.5,0.5);
     text.position.set(button.x, button.y);
     
-    pauseContainer.addChild(button);
-    pauseContainer.addChild(text);
-    
-    
+    container.addChild(button);
+    container.addChild(text);
 }
 
-function end(){}
-function initializeEnd(){}
+function end(){
+    if(endScene.visible == false) {
+        endScene.visible = true;
+        
+        charm.slide(endGameContainer, (endGameContainer.x), (gameHeight/2 + 15), 15).onComplete = () => 
+        charm.slide(endGameContainer, (endGameContainer.x), (gameHeight/2), 15).onComplete = () => {
+            console.log("end") 
+            editButtonActive(endRestartBtn, true);
+            editButtonActive(endQuitBtn, true);
+        }
+        
+    }
+}
+function initializeEnd(){
+    let acionEndQuit = () => {
+        console.log("quit")
+    };
+    let actionRestart = () => {
+        console.log("restart")
+    };
+    
+    endScene = new PIXI.Container();
+    app.stage.addChild(endScene);
+    
+    endGameContainer = new PIXI.Container();
+    endGameContainer.position.set(gameWidth/2, -SPRITE_OFF_SET);
+    endScene.addChild(endGameContainer);
+    
+    endGameMenu = new PIXI.Sprite(id[ASSET_GAMEOVER_POPUP]);
+    endGameMenu.anchor.set(0.5,0.5);
+    endGameContainer.addChild(endGameMenu);
+    
+    endRestartBtn = new PIXI.Sprite(id[ASSET_BUTTON_UP]);
+    setMenuButtons(endRestartBtn, 
+                   endRestartBtn.height/2 + 15,
+                   actionRestart,
+                   "Restart",
+                   endGameContainer);
+    
+    endQuitBtn = new PIXI.Sprite(id[ASSET_BUTTON_UP]);
+    setMenuButtons(endQuitBtn, 
+                   endQuitBtn.height * 2 - 5,
+                   acionEndQuit,
+                   "Quit",
+                   endGameContainer);
+    
+    
+    
+    endScene.visible = false;
+}
 
 
 function editButtonActive(button, active) {
