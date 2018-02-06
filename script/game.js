@@ -59,10 +59,16 @@ const LARGE_BTN_TEXT_STYLE = new PIXI.TextStyle({
 let playScene,
     playBG,
     pauseBtn,
+    pauseMenu,
     scoreText,
     scoreVal,
     timeText,
-    timeVal;
+    timeVal,
+    blackBackground,
+    pauseContainer,
+    resumeBtn,
+    restartBtn,
+    quitBtn;
 
 //end
 let endScene;
@@ -139,6 +145,7 @@ function initializeTitle() {
     titleScene = new PIXI.Container();
     titleScene.alpha = 0;
     app.stage.addChild(titleScene);
+    
 
     titleBG = new PIXI.Sprite(id[ASSET_TITLE_BG]);
     titleBG.position.set(gameWidth / 2, gameHeight / 2);
@@ -186,9 +193,52 @@ function play(){
 
 function initializePlay(){
     let actionPause = () => {
-        console.log("Pause!")
+        blackBackground.alpha = 0.5
+        
+        charm.scale(pauseContainer, 1.1, 1.1, 5).onComplete = () =>
+        charm.scale(pauseContainer, 1, 1, 5).onComplete = () => {
+           console.log("Pause!") 
+           editButtonActive(resumeBtn, true);
+           editButtonActive(restartBtn, true);
+           editButtonActive(quitBtn, true);
+        }
+        
+        
+        
     };
+    let actionResume = () => {
+        
+        charm.scale(pauseContainer, 1.1, 1.1, 5).onComplete = () =>
+        charm.scale(pauseContainer, 0, 0, 5).onComplete = () => {
+           blackBackground.alpha = 0;  
+           console.log("Resume!") 
+           editButtonActive(resumeBtn, false);
+           editButtonActive(restartBtn, false);
+           editButtonActive(quitBtn, false);
+        }
+    }
+    
+    let actionRestart = () => {
+        console.log("restart");
+    }
+    let actionQuit = () => {
+        charm.scale(pauseContainer, 1.1, 1.1, 5).onComplete = () =>
+        charm.scale(pauseContainer, 0, 0, 5).onComplete = () => {
+           blackBackground.alpha = 0;  
+           console.log("Quit!") 
+           editButtonActive(resumeBtn, false);
+           editButtonActive(restartBtn, false);
+           editButtonActive(quitBtn, false);
+            
+           charm.fadeOut(playScene, 30).onComplete = () => {
+               playScene.visible = false;
+               state = title;
+           }
+        }
+    }
+    
     let actionPressGem;
+    
     
     playScene = new PIXI.Container();
     playScene.alpha = 0;
@@ -209,6 +259,61 @@ function initializePlay(){
                             id[ASSET_PAUSE_DOWN],
                             id[ASSET_PAUSE_UP],
                             actionPause);
+    
+    blackBackground = new PIXI.Graphics();
+    blackBackground.drawRect((gameWidth/2) - (playBG.width/2), 
+                             (gameHeight/2) - (playBG.height/2), 
+                             playBG.width, 
+                             playBG.height);
+    blackBackground.alpha = 0;
+    
+    playScene.addChild(blackBackground);
+    
+    pauseMenu = new PIXI.Sprite(id[ASSET_PAUSE_MENU]);
+    pauseMenu.anchor.set(0.5,0.5);
+    
+    resumeBtn = new PIXI.Sprite(id[ASSET_BUTTON_UP]);
+    resumeBtn.anchor.set(0,0);
+    editButtonActive(resumeBtn, false);
+    addButtonActionListener(resumeBtn, 
+                            id[ASSET_BUTTON_DOWN],
+                            id[ASSET_BUTTON_UP],
+                            actionResume);
+    
+    restartBtn = new PIXI.Sprite(id[ASSET_BUTTON_UP]);
+    restartBtn.anchor.set(0.0);
+    editButtonActive(restartBtn, false);
+    addButtonActionListener(restartBtn, 
+                            id[ASSET_BUTTON_DOWN],
+                            id[ASSET_BUTTON_UP],
+                            actionRestart);
+    
+    quitBtn = new PIXI.Sprite(id[ASSET_BUTTON_UP]);
+    quitBtn.anchor.set(0,0);
+    editButtonActive(quitBtn, false);
+    addButtonActionListener(quitBtn,
+                            id[ASSET_BUTTON_DOWN],
+                            id[ASSET_BUTTON_UP],
+                            actionQuit);
+    
+    pauseContainer = new PIXI.Container();
+    pauseContainer.position.set(gameWidth/2, gameHeight/2);
+    
+    resumeBtn.position.set(-resumeBtn.width/2, -resumeBtn.height - 5);
+    restartBtn.position.set(-restartBtn.width/2, 3);
+    quitBtn.position.set(-quitBtn.width/2, resumeBtn.height + 10);
+    
+    
+    pauseContainer.addChild(pauseMenu);
+    pauseContainer.addChild(resumeBtn);
+    pauseContainer.addChild(restartBtn);
+    pauseContainer.addChild(quitBtn);
+    pauseContainer.scale.set(0,0);
+    
+    playScene.addChild(pauseContainer);
+    
+    
+    
     
     playScene.visible = false;
 }
@@ -240,3 +345,28 @@ function addButtonActionListener(button,
     .on("pointerdown", () => buttonDown(button, textureDown))
     .on("pointerup", () => buttonUp(button, textureUp, action));
 }
+
+//let time = 0;
+//let minuteElapse = 0;
+//let ctr = 0;
+//
+//function timer() {
+//    ctr++;
+//    if(ctr == 60) {
+//        time++;
+//        //console.log(time);
+//        ctr = 0;
+//        
+//        if(time < 10) {
+//            timeText.text = minuteElapse + ":0" + time; 
+//        }
+//        else if(time < 60) {
+//            timeText.text = minuteElapse + ":" + time;
+//        }
+//        else {
+//            minuteElapse++;
+//            time = 0;
+//            timeText.text = minuteElapse + ":00";
+//        }
+//    }
+//}
