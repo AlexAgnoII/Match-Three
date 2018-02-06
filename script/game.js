@@ -60,6 +60,9 @@ let playScene;
 //end
 let endScene;
 
+
+let charm = new Charm();
+
 gameDiv.appendChild(app.view);
 PIXI.loader
 .add(MATCH_THREE_ATLAS)
@@ -84,11 +87,30 @@ function setup() {
 }
 
 function gameLoop(delta) {
+
     state();
+    charm.update();
 }
 
 function title(){
-    
+    if(titleScene.visible == false) {
+        titleScene.visible = true;
+        
+        charm.fadeIn(titleScene, 30).onComplete = () => 
+        charm.scale(titleLogo, 1.1, 1.1, 10).onComplete = () =>
+        charm.scale(titleLogo, 1,1, 10).onComplete = () => {
+            
+            charm.scale(largeButtonGroup, 1.1, 1.1, 10).onComplete = () =>
+            charm.scale(largeButtonGroup, 1,1, 10).onComplete = () => {
+                
+                editButtonActive(largeButton, true);
+            }
+            
+        }
+            
+            
+
+    }
 }
 
 function initializeTitle() {
@@ -97,6 +119,7 @@ function initializeTitle() {
     }
     
     titleScene = new PIXI.Container();
+    titleScene.alpha = 0;
     app.stage.addChild(titleScene);
 
     titleBG = new PIXI.Sprite(id[ASSET_TITLE_BG]);
@@ -107,6 +130,7 @@ function initializeTitle() {
     titleLogo = new PIXI.Sprite(id[ASSET_TITLE]);
     titleLogo.position.set(gameWidth / 2, gameHeight / 2 - titleLogo.height);
     titleLogo.anchor.set(0.5,0.5);
+    titleLogo.scale.set(0,0);
     titleScene.addChild(titleLogo);
     
     largeButton = new PIXI.Sprite(id[ASSET_LARGE_BTN_UP]);
@@ -114,7 +138,7 @@ function initializeTitle() {
     let text = new PIXI.Text("Start Game", LARGE_BTN_TEXT_STYLE);
     text.anchor.set(0.5,0.5);
     
-    editButtonActive(largeButton, true);
+    editButtonActive(largeButton, false);
     addButtonActionListener(largeButton, 
                             id[ASSET_LARGE_BTN_DOWN],
                             id[ASSET_LARGE_BTN_UP],
@@ -126,9 +150,10 @@ function initializeTitle() {
     largeButtonGroup.addChild(largeButton);
     largeButtonGroup.addChild(text);
     largeButtonGroup.position.set(gameWidth/2, gameHeight/2 + largeButton.height/2);
+    largeButtonGroup.scale.set(0,0);
     titleScene.addChild(largeButtonGroup);
 
-
+    titleScene.visible = false;
 
 }
 
