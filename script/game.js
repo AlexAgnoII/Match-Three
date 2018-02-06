@@ -2,7 +2,7 @@
 Author: Alexander H. Agno II
 */
 "use strict";
-let gameDiv = document.getElementById("game");
+const gameDiv = document.getElementById("game");
 let gameHeight;
 let gameWidth;
 
@@ -41,7 +41,18 @@ let state,
 let titleScene,
     titleBG,
     titleLogo,
-    largeButton;
+    largeButton,
+    largeButtonGroup;
+const LARGE_BTN_TEXT_STYLE = new PIXI.TextStyle({
+    align: "center",
+    fill: "white",
+    fillGradientType: 1,
+    fontFamily: "Arial, Helvetica, sans-serif",
+    fontSize: 30,
+    fontWeight: "bold",
+    lineJoin: "round",
+    stroke: "white"
+});
 
 //play
 let playScene;
@@ -56,6 +67,13 @@ PIXI.loader
 
 function setup() {
     id = PIXI.loader.resources[MATCH_THREE_ATLAS].textures; 
+    gameHeight = id[ASSET_TITLE_BG].orig.height;
+    gameWidth = id[ASSET_TITLE_BG].orig.width;
+    console.log("Height: " + gameHeight)
+    console.log("Width: " + gameWidth)
+    app.renderer.autoResize = true;
+    app.renderer.resize(gameWidth, gameHeight);
+
     
     initializeTitle();
     initializePlay();
@@ -74,11 +92,44 @@ function title(){
 }
 
 function initializeTitle() {
+    let action = () => {
+        console.log("Play");
+    }
+    
     titleScene = new PIXI.Container();
     app.stage.addChild(titleScene);
 
-    console.log("wtf?")
+    titleBG = new PIXI.Sprite(id[ASSET_TITLE_BG]);
+    titleBG.position.set(gameWidth / 2, gameHeight / 2);
+    titleBG.anchor.set(0.5,0.5);
+    titleScene.addChild(titleBG);
     
+    titleLogo = new PIXI.Sprite(id[ASSET_TITLE]);
+    titleLogo.position.set(gameWidth / 2, gameHeight / 2 - titleLogo.height);
+    titleLogo.anchor.set(0.5,0.5);
+    titleScene.addChild(titleLogo);
+    
+    largeButton = new PIXI.Sprite(id[ASSET_LARGE_BTN_UP]);
+    largeButton.anchor.set(0.5,0.5);
+    let text = new PIXI.Text("Start Game", LARGE_BTN_TEXT_STYLE);
+    text.anchor.set(0.5,0.5);
+    
+    editButtonActive(largeButton, true);
+    addButtonActionListener(largeButton, 
+                            id[ASSET_LARGE_BTN_DOWN],
+                            id[ASSET_LARGE_BTN_UP],
+                            action);
+    
+    
+    
+    largeButtonGroup = new PIXI.Container();
+    largeButtonGroup.addChild(largeButton);
+    largeButtonGroup.addChild(text);
+    largeButtonGroup.position.set(gameWidth/2, gameHeight/2 + largeButton.height/2);
+    titleScene.addChild(largeButtonGroup);
+
+
+
 }
 
 function play(){}
@@ -86,19 +137,14 @@ function initializePlay(){}
 function end(){}
 function initializeEnd(){}
 
-function initializeButton(button) {
-    button.interactive = false;
-    button.buttonMode = false;
-    button.isDown = false;
+
+function editButtonActive(button, active) {
+    button.interactive = active;
+    button.buttonMode = active;
 }
 
-function activateButton(button) {
-    button.interactive = true;
-    button.buttonMode = true;
-}
-
-function buttonUp(sprite, textureUP, action) {
-    sprite.texture = textureUp;
+function buttonUp(sprite, texture, action) {
+    sprite.texture = texture;
     action();
 }
 
@@ -110,9 +156,8 @@ function addButtonActionListener(button,
                                   textureDown, //2  
                                   textureUp,     //4
                                   action) {
+
     button
     .on("pointerdown", () => buttonDown(button, textureDown))
-    .on("pointerup", () => buttonUp(button, 
-                                    textureUp, 
-                                    action));
+    .on("pointerup", () => buttonUp(button, textureUp, action));
 }
