@@ -467,8 +467,16 @@ function gemOnClick(gem) {
        //When Clicked, show some small animation
        charm.scale(gem, 1.5,1.5,10).onComplete = ()=> 
        charm.scale(gem, 1.2,1.2, 10).onComplete= () => {
+            
+           if(!clickContainer.includes(gem)) {
+               console.log("Not yet in.")
+               clickContainer.push(gem);
+           }
+           else {
+               console.log("Already in.");
+           }
 
-            clickContainer.push(gem);
+           
             //check if there is 2 gems clicked already
             if(clickContainer.length == 2) {
                 
@@ -492,10 +500,6 @@ function gemOnClick(gem) {
             setAllGemActive(true);
             console.log("Gems clicked: "+ clickContainer.length);
        };
-       
-
-
-
     });
     
 }
@@ -512,15 +516,28 @@ function swapGems(gem1, gem2) {
     let gem2Orig = []; //original gem2 position
     let temp;
     
+    //Canvas switching.
     gem1Orig.push(gem1.x);
     gem1Orig.push(gem1.y);
-    
     gem2Orig.push(gem2.x);
     gem2Orig.push(gem2.y);
-    
     charm.slide(gem1, gem2Orig[0], gem2Orig[1], 10);
     charm.slide(gem2, gem1Orig[0], gem1Orig[1], 10).onComplete = () => returnToNormalScale();
     
+    for (let x = 0; x < BOARD_SIZE; x++) {
+        for (let y = 0; y < BOARD_SIZE; y++) {
+            if(gem1 == gemContainer[x][y]) {
+                console.log("True(1): ");
+                console.log("Gemtype: " + gemContainer[x][y].gemType);
+                console.log("X|Y: " + x + "|" + y);
+            }
+            else if(gem2 == gemContainer[x][y]) {
+                console.log("True(2): ");
+                console.log("Gemtype: " + gemContainer[x][y].gemType);
+                console.log("X|Y: " + x + "|" + y);
+            }
+        }
+    }
     
     
     
