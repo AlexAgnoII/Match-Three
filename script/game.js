@@ -552,6 +552,20 @@ function swapGems(gem1, gem2) {
     
     printBoard();
     
+    console.log("After gem1: " + "("+ gem1.gemType +")"+ gem2Coor[0] +"|"+ gem2Coor[1]);
+    console.log("After gem2: " + "("+ gem2.gemType +")"+ gem1Coor[0] +"|"+ gem1Coor[1]);
+    
+    //Check if swapping caused a score!
+    checkVertical(gem1, )
+    
+    
+}
+
+function checkVertical() {
+    
+}
+
+function checkHorizontal() {
     
 }
 
