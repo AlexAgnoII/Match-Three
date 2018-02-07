@@ -380,7 +380,11 @@ function printBoard() {
     
     for(let x = 0; x < BOARD_SIZE; x++) {
         for(let y = 0; y < BOARD_SIZE; y++) {
-            aString+=gemContainer[x][y].gemType + "|" /*+ "(" + gemContainer[x][y].x +"|" + gemContainer[x][y].y + ")"*/;
+            try {
+                aString+=gemContainer[x][y].gemType + "|" + "(" + gemContainer[x][y].x +"|" + gemContainer[x][y].y + ")";
+            }catch(e) {
+              aString+="|0|"  
+            };
         }
         aString+="\n";
     }
@@ -459,7 +463,12 @@ function generateGem(gemNum, x, y) {
 function setAllGemActive(active) {
     for(let x = 0; x < BOARD_SIZE; x++) {
         for(let y = 0; y < BOARD_SIZE; y++) {
-            setGemActive(gemContainer[x][y], active);
+            try {
+               setGemActive(gemContainer[x][y], active);
+            }catch(e) {
+                console.log("Problem in setAllGemActive!");
+            }
+
         }
     }
 }
@@ -583,6 +592,12 @@ function swapGems(gem1, gem2) {
                 printBoard();
             } 
         }
+        
+        //Add and adjust the gems!
+        else {
+            
+        }
+        
         printBoard();
     }; // charm.slide bracket
 }
@@ -648,18 +663,39 @@ function checkIfMatching(gem, x, y) {
 
 //cleans the array with the matched gems
 function cleanArray(gemArray) {
+    let gemSize = id[ASSET_GEM + "1" + ASSET_FILE_TYPE].orig.height;
+    let size = gemSize * BOARD_SIZE;
+    
     for(let x = 0; x < BOARD_SIZE; x++) {
         for(let y = 0; y < BOARD_SIZE; y++) {
             
             for(let i = 0; i < gemArray.length; i++) {
                 
                 if(gemArray[i] == gemContainer[x][y]) {
+                    
+//                    charm.slide(gemContainer[x][y], x*size, y*size, 20);
+//                    
+                    //splice.
                     gemContainer[x].splice(y, 1);
-                    gemContainer[x].push(0);
+                    
                 }
                 
             }
         }
+    }
+    
+    for(let x = 0; x < BOARD_SIZE; x++) {
+        for(let y = 0; y < BOARD_SIZE; y++) {
+            try {
+                charm.slide(gemContainer[x][y], x*50, size);
+                size-=gemSize;
+            }
+            catch(e) {
+                size-=gemSize;
+            }
+
+        }
+        size = gemSize * BOARD_SIZE;
     }
 }
 
