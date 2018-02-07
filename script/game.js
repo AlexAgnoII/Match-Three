@@ -477,14 +477,15 @@ function gemOnClick(gem) {
                     (Math.abs(clickContainer[0].x - clickContainer[1].x) == 50 && Math.abs(clickContainer[0].y - clickContainer[1].y) == 0)    //user chose vertical difference.
                   ) {
                     console.log("Together!")
+                    
+                    //if together, swap places.
+                    swapGems(clickContainer[0], clickContainer[1]);
+
                 }
 
                 else {
                     console.log("NOT TOGETHER");
-                    while(clickContainer.length > 0) {
-                        clickContainer[0].scale.set(1,1);
-                        clickContainer.splice(0,1);
-                    }
+                    returnToNormalScale();
                 }
             }
            
@@ -496,6 +497,32 @@ function gemOnClick(gem) {
 
 
     });
+    
+}
+
+function returnToNormalScale() {
+    while(clickContainer.length > 0) {
+        clickContainer[0].scale.set(1,1);
+        clickContainer.splice(0,1);
+    }
+}
+
+function swapGems(gem1, gem2) {
+    let gem1Orig = []; //original gem1 position
+    let gem2Orig = []; //original gem2 position
+    let temp;
+    
+    gem1Orig.push(gem1.x);
+    gem1Orig.push(gem1.y);
+    
+    gem2Orig.push(gem2.x);
+    gem2Orig.push(gem2.y);
+    
+    charm.slide(gem1, gem2Orig[0], gem2Orig[1], 10);
+    charm.slide(gem2, gem1Orig[0], gem1Orig[1], 10).onComplete = () => returnToNormalScale();
+    
+    
+    
     
 }
 
