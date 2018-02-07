@@ -24,6 +24,7 @@ const ASSET_CONTAINER = "assets/container.png"
 
 const SPRITE_OFF_SET = 1000;
 const BOARD_SIZE = 8;
+const SCORE_DEFAULT = 300;
 
 let app = new PIXI.Application({ 
     width: 800, 
@@ -49,7 +50,7 @@ let playScene,
     playBG,
     pauseBtn,
     pauseMenu,
-    scoreVal = 0,
+    scoreVal,
     timeVal,
     blackBackground,
     pauseContainer,
@@ -78,7 +79,7 @@ let endScene,
 
 //timer
 let currentScore = 0;
-let time = 5;
+let time = 60;
 let ctr = 0;
 let timerOn = false;
 let timesUp = false;
@@ -207,6 +208,7 @@ function play(){
     if(timesUp) {
        blackBackground.alpha = 0.5;
        setAllGemActive(false);
+       endScoreVal.text = currentScore;
        state = end;
     }
     
@@ -621,6 +623,7 @@ function checkIfMatching(gem, x, y) {
     
 
     if(horizontalGem.length >= 3) {
+        updateScore(horizontalGem.length);
         for(let i = 0; i < horizontalGem.length; i++) {
             charm.fadeOut(horizontalGem[i], 20);
         }
@@ -637,6 +640,7 @@ function checkIfMatching(gem, x, y) {
     } 
         
     if(verticalGem.length >= 3) {
+        updateScore(verticalGem.length);
         for(let i = 0; i < verticalGem.length; i++) {
             charm.fadeOut(verticalGem[i], 20);
         }
@@ -665,6 +669,24 @@ function checkIfMatching(gem, x, y) {
     console.log("Vertical(NEW): " + verticalGem.length)
     
     return didHappen;
+}
+
+function updateScore(gemCount) {
+    
+    if(gemCount == 3) {
+        currentScore+= SCORE_DEFAULT;
+
+    }
+    
+    if(gemCount == 4) {
+       currentScore+= ((SCORE_DEFAULT+100)*2);
+    }
+    
+    if(gemCount >= 5) {
+        currentScore+= ((SCORE_DEFAULT+100)*3);
+    }
+    
+    scoreVal.text = currentScore;
 }
 
 //cleans the array with the matched gems
