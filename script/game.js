@@ -561,29 +561,73 @@ function swapGems(gem1, gem2) {
                        gem2, gem2Coor[0], gem2Coor[1]);
 
         printBoard();
-
-        //Check if swapping caused a score!
-        checkHorizontal(gem1.gemType, gem2Coor[0], gem2Coor[1]);
-        checkVertical(gem1.gemType, gem2Coor[0], gem2Coor[1]);
         
-        console.log(horizontalGem.length);
-
-        if(horizontalGem.length >= 3) {
-            while(horizontalGem.length > 0) {
-                charm.fadeOut(horizontalGem[0]);
-                horizontalGem.splice(0,1);
-            }
-        } 
+        let count = 0;
         
-        if(verticalGem.length >= 3) {
-            while(verticalGem.length > 0) {
-                charm.fadeOut(verticalGem[0]);
-                verticalGem.splice(0,1);
-            }
+        if(checkIfMatching(gem1, gem2Coor[0], gem2Coor[1])) {
+            count++;   
         }
         
-        resetGemStatus(); // resets all gem to have false.
+        if(checkIfMatching(gem2, gem1Coor[0], gem1Coor[1])) {
+            count++;   
+        }
+        
+        if(count == 0) { //Revert.
+            console.log("MUST REVERT");
+        } 
+
+
+        
+        
     }; // charm.slide bracket
+}
+
+function checkIfMatching(gem, x, y) {
+    
+    let didHappen = false;
+    
+    //Check if swapping caused a score!
+    checkHorizontal(gem.gemType, x, y);
+    checkVertical(gem.gemType, x, y);
+    
+
+    if(horizontalGem.length >= 3) {
+        while(horizontalGem.length > 0) {
+                console.log(horizontalGem[0].gemType);
+                charm.fadeOut(horizontalGem[0]).onComplete = () => {
+                    //board.removeChild(horizontalGem[0]);
+                    
+                };
+                horizontalGem.splice(0,1);
+        }
+            
+        didHappen = true;
+    } 
+        
+    if(verticalGem.length >= 3) {
+        while(verticalGem.length > 0) {
+            console.log(verticalGem[0].gemType)
+            charm.fadeOut(verticalGem[0]).onComplete = () => {
+                    //board.removeChild(verticalGem[0]);
+            };
+            verticalGem.splice(0,1);
+        }
+        didHappen = true;
+    }
+    
+    resetGemStatus(); // resets all gem to have false.
+    console.log("Horizontal: " + horizontalGem.length)
+    console.log("Vertical: " + verticalGem.length)
+    
+    if(horizontalGem.length > 0)
+        horizontalGem.splice(0,horizontalGem.length);
+    if(verticalGem.length > 0)
+        verticalGem.splice(0, verticalGem.length);
+
+    console.log("Horizontal(NEW): " + horizontalGem.length)
+    console.log("Vertical(NEW): " + verticalGem.length)
+    
+    return didHappen;
 }
 
 function checkHorizontal(gemType, x, y) {
@@ -595,7 +639,6 @@ function checkHorizontal(gemType, x, y) {
         if(gemType == gem.gemType) {
 
              if(gem.checkRight == false) {
-                 console.log("Found!")
                  gem.checkRight = true;
                  if(!horizontalGem.includes(gem))
                      horizontalGem.push(gem);
@@ -603,7 +646,6 @@ function checkHorizontal(gemType, x, y) {
              }
             
             if(gem.checkLeft == false) {
-                console.log("Found!")
                 gem.checkLeft = true;
                  if(!horizontalGem.includes(gem))
                      horizontalGem.push(gem);
@@ -623,7 +665,6 @@ function checkVertical(gemType, x, y) {
         if(gemType == gem.gemType) {
             
              if(gem.checkUp == false) {
-                 console.log("Found!")
                  gem.checkUp = true;
                  if(!verticalGem.includes(gem))
                      verticalGem.push(gem);
@@ -631,7 +672,6 @@ function checkVertical(gemType, x, y) {
              }
             
             if(gem.checkDown == false) {
-                console.log("Found!")
                 gem.checkDown = true;
                  if(!verticalGem.includes(gem))
                      verticalGem.push(gem);
