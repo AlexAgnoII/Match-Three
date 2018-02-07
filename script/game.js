@@ -355,8 +355,7 @@ function initializePlay(){
     
     createBoard();
     board.position.set((gameWidth/2) + 25, 
-                       (gameHeight/2) + 50
-                      );
+                       (gameHeight/2));
     playScene.addChild(board);
     board.pivot.x = board.width/2;
     board.pivot.y = board.height/2;
@@ -373,7 +372,7 @@ function printBoard() {
     
     for(let x = 0; x < BOARD_SIZE; x++) {
         for(let y = 0; y < BOARD_SIZE; y++) {
-            aString+=gemContainer[x][y].gemType + "|";
+            aString+=gemContainer[x][y].gemType + "|" + "(" + gemContainer[x][y].x +"|" + gemContainer[x][y].y + ")";
         }
         aString+="\n";
     }
@@ -382,19 +381,19 @@ function printBoard() {
 }
 
 function createBoard() {
-    let xReal = 0;
-    let yReal = 0;  
     let gemSize = id[ASSET_GEM + "1.png"].orig.height; //width and height is the same.
+    let xReal = 0;
+    let yReal = gemSize * BOARD_SIZE;  
     
     for(let x = 0; x < BOARD_SIZE; x++) {
         gemContainer.push([])
         
         for(let y = 0; y < BOARD_SIZE; y++) {
             gemContainer[x].push(generateGem(determineGem(), xReal, yReal));
-            yReal += gemSize;
+            yReal -= gemSize;
         }
         
-        yReal = 0;
+        yReal = gemSize * BOARD_SIZE;
         xReal+= gemSize;
     }
     console.log(gemContainer);
