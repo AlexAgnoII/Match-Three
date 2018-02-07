@@ -524,21 +524,43 @@ function swapGems(gem1, gem2) {
     charm.slide(gem1, gem2Orig[0], gem2Orig[1], 10);
     charm.slide(gem2, gem1Orig[0], gem1Orig[1], 10).onComplete = () => returnToNormalScale();
     
+    //*Context of gemContainer*//
+    let gem1Coor = []; //gem1 x n y
+    let gem2Coor = []; //gem2 x n y
+    //Array Switching
     for (let x = 0; x < BOARD_SIZE; x++) {
         for (let y = 0; y < BOARD_SIZE; y++) {
             if(gem1 == gemContainer[x][y]) {
                 console.log("True(1): ");
                 console.log("Gemtype: " + gemContainer[x][y].gemType);
                 console.log("X|Y: " + x + "|" + y);
+                gem1Coor.push(x);
+                gem1Coor.push(y);
             }
             else if(gem2 == gemContainer[x][y]) {
                 console.log("True(2): ");
                 console.log("Gemtype: " + gemContainer[x][y].gemType);
                 console.log("X|Y: " + x + "|" + y);
+                gem2Coor.push(x);
+                gem2Coor.push(y);
             }
         }
     }
     
+    swapGemInArray(gem1, gem1Coor[0], gem1Coor[1],
+                   gem2, gem2Coor[0], gem2Coor[1]);
+    
+    printBoard();
+    
+    
+}
+
+function swapGemInArray(gem1, gem1X, gem1Y,
+                        gem2, gem2X, gem2Y) {
+    
+    let temp = gem1;
+    gemContainer[gem1X][gem1Y] = gem2;
+    gemContainer[gem2X][gem2Y] = temp;
     
     
 }
