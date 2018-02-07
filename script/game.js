@@ -556,13 +556,28 @@ function swapGems(gem1, gem2) {
     console.log("After gem2: " + "("+ gem2.gemType +")"+ gem1Coor[0] +"|"+ gem1Coor[1]);
     
     //Check if swapping caused a score!
-    checkVertical(gem1, )
+    console.log(checkVertical(gem1.gemType, gem2Coor[0], gem2Coor[1]));
     
     
 }
 
-function checkVertical() {
-    
+function checkVertical(gemType, x, y) {
+    console.log("Called!");
+    console.log("GemType: " + gemContainer[x][y].gemType);
+    if(x >= 0 && x < BOARD_SIZE &&
+       y >= 0 && y < BOARD_SIZE) {
+        
+        if(gemType == gemContainer[x][y].gemType) {
+           return 1 + checkVertical(gemType, x+1, y);
+        }
+        else {
+            return 0;
+        }
+        
+        
+        
+        
+    }
 }
 
 function checkHorizontal() {
