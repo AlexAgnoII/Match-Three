@@ -534,7 +534,7 @@ function swapGems(gem1, gem2) {
     gem1Orig.push(gem1.y);
     gem2Orig.push(gem2.x);
     gem2Orig.push(gem2.y);
-    charm.slide(gem1, gem2Orig[0], gem2Orig[1], 10).onComplete = () =>
+    charm.slide(gem1, gem2Orig[0], gem2Orig[1], 5).onComplete = () =>
     charm.slide(gem2, gem1Orig[0], gem1Orig[1], 5).onComplete = () => {
         returnToNormalScale();  
         
