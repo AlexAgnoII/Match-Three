@@ -188,6 +188,7 @@ function play(){
         
         charm.fadeIn(playScene, 30).onComplete = () => {
             editButtonActive(pauseBtn, true);
+            setAllGemActive(true);
             timerOn = true;
         };
     }
@@ -204,6 +205,7 @@ function initializePlay(){
     let actionPause = () => {
         blackBackground.alpha = 0.5
         editButtonActive(pauseBtn, false);
+        setAllGemActive(false);
         timerOn = false;
         
         charm.scale(pauseContainer, 1.1, 1.1, 5).onComplete = () =>
@@ -227,6 +229,7 @@ function initializePlay(){
            editButtonActive(restartBtn, false);
            editButtonActive(quitBtn, false);
            editButtonActive(pauseBtn, true);
+            setAllGemActive(true);
            timerOn = true;
         }
     }
@@ -240,6 +243,7 @@ function initializePlay(){
             editButtonActive(restartBtn, false);
             editButtonActive(quitBtn, false);
             editButtonActive(pauseBtn, true);
+            setAllGemActive(true);
             state = play;
         };
         console.log("restart");
@@ -299,6 +303,19 @@ function initializePlay(){
                              playBG.height);
     blackBackground.alpha = 0;
     playScene.addChild(blackBackground);
+    
+    
+    board = new PIXI.Container();
+    createBoard();
+    board.position.set((gameWidth/2) + 25, 
+                       (gameHeight/2));
+    playScene.addChild(board);
+    board.pivot.x = board.width/2;
+    board.pivot.y = board.height/2;
+    
+    //test
+    printBoard();
+    //test
 
     pauseContainer = new PIXI.Container();
     pauseContainer.position.set(gameWidth/2, gameHeight/2);
@@ -350,19 +367,7 @@ function initializePlay(){
     
     playScene.addChild(testButton);
     /*********************TEMPORARY***************************/
-    
-    board = new PIXI.Container();
-    
-    createBoard();
-    board.position.set((gameWidth/2) + 25, 
-                       (gameHeight/2));
-    playScene.addChild(board);
-    board.pivot.x = board.width/2;
-    board.pivot.y = board.height/2;
-    
-    //test
-    printBoard();
-    //test
+
     
     playScene.visible = false;
 }
@@ -372,7 +377,7 @@ function printBoard() {
     
     for(let x = 0; x < BOARD_SIZE; x++) {
         for(let y = 0; y < BOARD_SIZE; y++) {
-            aString+=gemContainer[x][y].gemType + "|" + "(" + gemContainer[x][y].x +"|" + gemContainer[x][y].y + ")";
+            aString+=gemContainer[x][y].gemType + "|" /*+ "(" + gemContainer[x][y].x +"|" + gemContainer[x][y].y + ")"*/;
         }
         aString+="\n";
     }
@@ -436,10 +441,27 @@ function generateGem(gemNum, x, y) {
     gem.gemType = gemNum;
     gem.anchor.set(0.5,0.5);
     gem.position.set(x, y);
+    gemOnClick(gem);
+    setGemActive(gem, false);
     board.addChild(gem);
-    
     return gem;
-    
+}
+
+function setAllGemActive(active) {
+    for(let x = 0; x < BOARD_SIZE; x++) {
+        for(let y = 0; y < BOARD_SIZE; y++) {
+            setGemActive(gemContainer[x][y], active);
+        }
+    }
+}
+
+function setGemActive(gem, active) {
+    gem.interactive = active;
+    gem.buttonMode = active;
+}
+
+function gemOnClick(gem) {
+    console.log(gem.gemType);
 }
 
 function setMenuButtons(button,
