@@ -677,7 +677,7 @@ function cleanHorizontalArray(gemArray) {
     //generate new gems
     for(let x = 0; x < BOARD_SIZE; x++) {
         while(gemContainer[x].length < BOARD_SIZE) {
-            gemContainer[x].push(generateGem(determineGem(), x, -1000));
+            gemContainer[x].push(generateGem(determineGem(), gemContainer[x][0].x, -1000));
         }
     }
     
@@ -694,8 +694,8 @@ function cleanHorizontalArray(gemArray) {
 function cleanVerticalArray(gemArray) {
     let gemSize = id[ASSET_GEM + "1" + ASSET_FILE_TYPE].orig.height;
     let vertical = divide(gemArray[0].x, gemSize);
-    console.log(gemArray[0].x);
-    console.log("Vertical is: " + vertical);
+//    console.log(gemArray[0].x);
+//    console.log("Vertical is: " + vertical);
     
     let index = 0;
     let found = false
@@ -718,7 +718,18 @@ function cleanVerticalArray(gemArray) {
         }
     }
     
-    console.log(gemContainer[vertical].length);
+//    console.log(gemContainer[vertical].length);
+    while(gemContainer[vertical].length < BOARD_SIZE) {
+        gemContainer[vertical].push(generateGem(determineGem(), gemArray[0].x, -1000));
+    }
+
+    //slide gems
+    let size = gemSize*BOARD_SIZE;
+    for(let y = 0; y < BOARD_SIZE; y++) {
+        charm.slide(gemContainer[vertical][y], vertical*50, size);
+        size-=gemSize;
+    }
+
     
     
 }
