@@ -673,11 +673,14 @@ function cleanHorizontalArray(gemArray) {
             }
         }
     }
-    
+    let gem;
     //generate new gems
     for(let x = 0; x < BOARD_SIZE; x++) {
         while(gemContainer[x].length < BOARD_SIZE) {
-            gemContainer[x].push(generateGem(determineGem(), gemContainer[x][0].x, -1000));
+            gem = generateGem(determineGem(), gemContainer[x][0].x, -1000);
+            gem.interactive = true;
+            gem.buttonMode = true;
+            gemContainer[x].push(gem);
         }
     }
     
@@ -717,10 +720,13 @@ function cleanVerticalArray(gemArray) {
             index++;
         }
     }
-    
+    let gem;
 //    console.log(gemContainer[vertical].length);
     while(gemContainer[vertical].length < BOARD_SIZE) {
-        gemContainer[vertical].push(generateGem(determineGem(), gemArray[0].x, -1000));
+        gem = generateGem(determineGem(), gemArray[0].x, -1000);
+        gem.interactive = true;
+        gem.buttonMode = true;
+        gemContainer[vertical].push(gem);
     }
 
     //slide gems
