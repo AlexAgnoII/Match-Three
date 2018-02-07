@@ -408,23 +408,23 @@ function determineGem() {
     let randomNumber = Math.floor((Math.random() * 120) + 1);
     
     //Purple Triangle GEM_1
-    if(randomNumber >= 1 && randomNumber <= 30) {
+    if(randomNumber >= 1 && randomNumber <= 20) {
         return 1;
     }
     //Green Pentagon GEM_2
-    else if(randomNumber >= 31 && randomNumber <= 50) {
+    else if(randomNumber >= 21 && randomNumber <= 40) {
         return 2;
     }
     //Red Square GEM_3
-    else if(randomNumber >= 51 && randomNumber <= 80) {
+    else if(randomNumber >= 41 && randomNumber <= 60) {
         return 3;
     }
     //orange heptagon GEM_4
-    else if(randomNumber >= 81 && randomNumber <= 100) {
+    else if(randomNumber >= 61 && randomNumber <= 80) {
         return 4;
     }
     //blue Diamon GEM_5
-    else if(randomNumber >= 101 && randomNumber <= 110) {
+    else if(randomNumber >= 81 && randomNumber <= 100) {
         return 5;
     }
     //yellow Octagon GEM_6
@@ -461,7 +461,42 @@ function setGemActive(gem, active) {
 }
 
 function gemOnClick(gem) {
-    console.log(gem.gemType);
+    gem.on("pointerup", () => {
+       console.log(gem.gemType); 
+       setAllGemActive(false);
+       //When Clicked, show some small animation
+       charm.scale(gem, 1.5,1.5,10).onComplete = ()=> 
+       charm.scale(gem, 1.2,1.2, 10).onComplete= () => {
+
+            clickContainer.push(gem);
+            //check if there is 2 gems clicked already
+            if(clickContainer.length == 2) {
+                
+                //make sure that they are ADJACENT (difference of x and y must be | 50 |)
+                if( (Math.abs(clickContainer[0].y - clickContainer[1].y) == 50 && Math.abs(clickContainer[0].x - clickContainer[1].x) == 0) || //user chose horizontal difference.
+                    (Math.abs(clickContainer[0].x - clickContainer[1].x) == 50 && Math.abs(clickContainer[0].y - clickContainer[1].y) == 0)    //user chose vertical difference.
+                  ) {
+                    console.log("Together!")
+                }
+
+                else {
+                    console.log("NOT TOGETHER");
+                    while(clickContainer.length > 0) {
+                        clickContainer[0].scale.set(1,1);
+                        clickContainer.splice(0,1);
+                    }
+                }
+            }
+           
+            setAllGemActive(true);
+            console.log("Gems clicked: "+ clickContainer.length);
+       };
+       
+
+
+
+    });
+    
 }
 
 function setMenuButtons(button,
@@ -618,7 +653,7 @@ function timer() {
     if(ctr == 60) {
         time++;
         ctr = 0;
-            console.log(time);
+//            console.log(time);
         if(time < 10) {
             timeVal.text = minuteElapse + ":0" + time; 
         }
