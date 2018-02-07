@@ -49,7 +49,7 @@ let playScene,
     playBG,
     pauseBtn,
     pauseMenu,
-    scoreVal,
+    scoreVal = 0,
     timeVal,
     blackBackground,
     pauseContainer,
@@ -77,6 +77,7 @@ let endScene,
     endGameContainer;
 
 //timer
+let currentScore = 0;
 let time = 5;
 let ctr = 0;
 let timerOn = false;
@@ -321,6 +322,11 @@ function initializePlay(){
     scoreText.anchor.set(0.5,0.5);
     scoreText.position.set(scoreContainer.x - scoreText.width + 12, scoreContainer.y);
     playScene.addChild(scoreText);
+    
+    scoreVal = new PIXI.Text(currentScore, createTextStyle(15, "white"))
+    scoreVal.anchor.set(1,0.5);
+    scoreVal.position.set(scoreText.x*2 - 20, scoreText.y);
+    playScene.addChild(scoreVal);
 
     board = new PIXI.Container();
     createBoard();
