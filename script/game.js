@@ -60,6 +60,9 @@ let playScene,
 let board,// contains the gem
     gemContainer = [],
     clickContainer = [];//remembers which gem you've clicked 
+
+let verticalGem = [],
+    horizontalGem = [];
     
 
 //end
@@ -444,6 +447,12 @@ function generateGem(gemNum, x, y) {
     gemOnClick(gem);
     setGemActive(gem, false);
     board.addChild(gem);
+    
+    gem.checkUp = false;
+    gem.checkDown = false;
+    gem.checkLeft = false;
+    gem.checkRight = false;
+    
     return gem;
 }
 
@@ -556,31 +565,60 @@ function swapGems(gem1, gem2) {
     console.log("After gem2: " + "("+ gem2.gemType +")"+ gem1Coor[0] +"|"+ gem1Coor[1]);
     
     //Check if swapping caused a score!
-    console.log(checkVertical(gem1.gemType, gem2Coor[0], gem2Coor[1]));
+    checkHorizontal(gem1.gemType, gem2Coor[0], gem2Coor[1])
+    console.log(horizontalGem.length);
     
     
 }
 
-function checkVertical(gemType, x, y) {
-    console.log("Called!");
-    console.log("GemType: " + gemContainer[x][y].gemType);
+function checkHorizontal(gemType, x, y) {
+//    console.log("Called!");
+//    console.log("GemType: " + gemContainer[x][y].gemType);
     if(x >= 0 && x < BOARD_SIZE &&
        y >= 0 && y < BOARD_SIZE) {
         
-        if(gemType == gemContainer[x][y].gemType) {
-           return 1 + checkVertical(gemType, x+1, y);
+        let gem = gemContainer[x][y];
+        if(gemType == gem.gemType) {
+//           return 1 + checkVertical(gemType, x+1, y);
+            
+             if(gem.checkRight == false) {
+                 console.log("Found!")
+                 gem.checkRight = true;
+                 if(!horizontalGem.includes(gem))
+                     horizontalGem.push(gem);
+                 checkHorizontal(gemType, x+1, y);
+             }
+            
+            if(gem.checkLeft == false) {
+                console.log("Found!")
+                gem.checkLeft = true;
+                 if(!horizontalGem.includes(gem))
+                     horizontalGem.push(gem);
+                checkHorizontal(gemType, x-1, y);
+            }
+            
         }
-        else {
-            return 0;
-        }
-        
-        
-        
-        
+//        else {
+//            return 0;
+//        }
     }
 }
 
-function checkHorizontal() {
+function checkVertical() {
+    
+}
+
+//resets the checkTop, left, right, down back to false.
+function resetGemStatus() {
+    
+    for(let x = 0; x < BOARD_SIZE; x++ ) {
+        for(let y = 0; y < BOARD_SIZE; y++) {
+            gemContainer[x][y].checkDown = false;
+            gemContainer[x][y].checkUp = false;
+            gemContainer[x][y].checkLeft = false;
+            gemContainer[x][y].checkRight = false;
+        }
+    }
     
 }
 
@@ -628,6 +666,7 @@ function end(){
         
     }
 }
+
 function initializeEnd(){
     let acionEndQuit = () => {//reseting required here
         console.log("quit");
