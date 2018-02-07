@@ -20,6 +20,7 @@ const ASSET_PAUSE_DOWN = "asset_pause_down.png";
 const ASSET_TITLE = "asset_title.png";
 const ASSET_TITLE_BG = "asset_title_bg.png";
 const ASSET_FILE_TYPE = ".png";
+const ASSET_CONTAINER = "assets/container.png"
 
 const SPRITE_OFF_SET = 1000;
 const BOARD_SIZE = 8;
@@ -54,7 +55,9 @@ let playScene,
     pauseContainer,
     resumeBtn,
     restartBtn,
-    quitBtn;
+    quitBtn,
+    timeContainer,
+    scoreContainer;
 
 //
 let board,// contains the gem
@@ -74,10 +77,10 @@ let endScene,
     endGameContainer;
 
 //timer
-let time = 0;
-let minuteElapse = 0;
+let time = 5;
 let ctr = 0;
 let timerOn = false;
+let timesUp = false;
 
 
 
@@ -85,7 +88,7 @@ let charm = new Charm();
 
 gameDiv.appendChild(app.view);
 PIXI.loader
-.add(MATCH_THREE_ATLAS)
+.add([MATCH_THREE_ATLAS, ASSET_CONTAINER])
 .load(setup);
 
 function setup() {
@@ -200,6 +203,12 @@ function play(){
         timer();
     }
     
+    if(timesUp) {
+       blackBackground.alpha = 0.5;
+       setAllGemActive(false);
+       state = end;
+    }
+    
 }
 
 
@@ -288,16 +297,28 @@ function initializePlay(){
                             id[ASSET_PAUSE_UP],
                             actionPause);
 
+    timeContainer = new PIXI.Sprite(PIXI.loader.resources[ASSET_CONTAINER].texture);
+    timeContainer.anchor.set(0.5,0.5);
+    timeContainer.position.set(gameWidth/2 + timeContainer.width/3, pauseBtn.y);
+    playScene.addChild(timeContainer);
             
-    let timeText = new PIXI.Text("Time remaining: ", createTextStyle(15, "white"));
+    let timeText = new PIXI.Text("Time remaining: ", createTextStyle(12, "white"));
     timeText.anchor.set(0.5,0.5);
     timeText.position.set(pauseBtn.x - pauseBtn.width * 3, pauseBtn.y);
     playScene.addChild(timeText);
     
-    timeVal = new PIXI.Text("0:00", createTextStyle(15, "white"));
+    timeVal = new PIXI.Text(time, createTextStyle(12, "white"));
     timeVal.anchor.set(0.5,0.5);
-    timeVal.position.set(pauseBtn.x - pauseBtn.width - pauseBtn.width/4, pauseBtn.y);
+    timeVal.position.set(pauseBtn.x - pauseBtn.width - 45, pauseBtn.y);
     playScene.addChild(timeVal);
+
+    board = new PIXI.Container();
+    createBoard();
+    board.position.set((gameWidth/2) + 25, 
+                       (gameHeight/2));
+    playScene.addChild(board);
+    board.pivot.x = board.width/2;
+    board.pivot.y = board.height/2;
     
     blackBackground = new PIXI.Graphics();
     blackBackground.drawRect((gameWidth/2) - (playBG.width/2), 
@@ -306,15 +327,7 @@ function initializePlay(){
                              playBG.height);
     blackBackground.alpha = 0;
     playScene.addChild(blackBackground);
-    
-    
-    board = new PIXI.Container();
-    createBoard();
-    board.position.set((gameWidth/2) + 25, 
-                       (gameHeight/2));
-    playScene.addChild(board);
-    board.pivot.x = board.width/2;
-    board.pivot.y = board.height/2;
+
     
     //test
     printBoard();
@@ -350,26 +363,13 @@ function initializePlay(){
                        "Quit",
                         pauseContainer);
 
-    /*********************TEMPORARY***************************/
     let pauseText = new PIXI.Text("Paused", createTextStyle(20, "white"));
     pauseText.anchor.set(0.5,0.5);
     pauseText.position.set(0, -(pauseText.height*5) + 5);
     pauseContainer.addChild(pauseText);
-    
-    let testButton = new PIXI.Sprite(id[ASSET_BUTTON_UP]);
-    testButton.interactive = true;
-    testButton.buttonMode = true;
-    
-    testButton.on("pointerdown", () => {
 
-        //End scenario happens here
-       blackBackground.alpha = 0.5;
-       state = end;
-        
-    });
     
-    playScene.addChild(testButton);
-    /*********************TEMPORARY***************************/
+    
 
     
     playScene.visible = false;
@@ -976,19 +976,12 @@ function timer() {
     ctr++;
 
     if(ctr == 60) {
-        time++;
+        time--;
         ctr = 0;
-//            console.log(time);
-        if(time < 10) {
-            timeVal.text = minuteElapse + ":0" + time; 
-        }
-        else if(time < 60) {
-            timeVal.text = minuteElapse + ":" + time;
-        }
-        else {
-            minuteElapse++;
-            time = 0;
-            timeVal.text = minuteElapse + ":00";
-        }
+        timeVal.text = time;
+    }
+    
+    if(time == 0) {
+        timesUp = true;
     }
 }
