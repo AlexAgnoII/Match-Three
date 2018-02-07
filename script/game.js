@@ -380,11 +380,8 @@ function printBoard() {
     
     for(let x = 0; x < BOARD_SIZE; x++) {
         for(let y = 0; y < BOARD_SIZE; y++) {
-            try {
-                aString+=gemContainer[x][y].gemType + "|" + "(" + gemContainer[x][y].x +"|" + gemContainer[x][y].y + ")";
-            }catch(e) {
-              aString+="|0|"  
-            };
+            aString+=gemContainer[x][y].gemType + "|" + "(" + gemContainer[x][y].x +"|" + gemContainer[x][y].y + ")  ";
+
         }
         aString+="\n";
     }
@@ -463,11 +460,9 @@ function generateGem(gemNum, x, y) {
 function setAllGemActive(active) {
     for(let x = 0; x < BOARD_SIZE; x++) {
         for(let y = 0; y < BOARD_SIZE; y++) {
-            try {
-               setGemActive(gemContainer[x][y], active);
-            }catch(e) {
-                console.log("Problem in setAllGemActive!");
-            }
+
+            setGemActive(gemContainer[x][y], active);
+
 
         }
     }
@@ -539,8 +534,8 @@ function swapGems(gem1, gem2) {
     gem1Orig.push(gem1.y);
     gem2Orig.push(gem2.x);
     gem2Orig.push(gem2.y);
-    charm.slide(gem1, gem2Orig[0], gem2Orig[1], 10).onComplete;
-    charm.slide(gem2, gem1Orig[0], gem1Orig[1], 10).onComplete = () => {
+    charm.slide(gem1, gem2Orig[0], gem2Orig[1], 10).onComplete = () =>
+    charm.slide(gem2, gem1Orig[0], gem1Orig[1], 5).onComplete = () => {
         returnToNormalScale();  
         
         //*Context of gemContainer*//
@@ -569,7 +564,7 @@ function swapGems(gem1, gem2) {
         swapGemInArray(gem1, gem1Coor[0], gem1Coor[1],
                        gem2, gem2Coor[0], gem2Coor[1]);
 
-        printBoard();
+        //printBoard();
         
         let count = 0;
         
@@ -589,16 +584,11 @@ function swapGems(gem1, gem2) {
                 swapGemInArray(gem1, gem2Coor[0], gem2Coor[1],
                                gem2, gem1Coor[0], gem1Coor[1]);
 
-                printBoard();
+                //printBoard();
             } 
         }
         
-        //Add and adjust the gems!
-        else {
-            
-        }
-        
-        printBoard();
+       printBoard();
     }; // charm.slide bracket
 }
 
@@ -620,7 +610,7 @@ function checkIfMatching(gem, x, y) {
         }
         
         //update array
-        cleanArray(horizontalGem);
+        cleanHorizontalArray(horizontalGem);
         
         while(horizontalGem.length > 0) {
             board.removeChild(horizontalGem[0]);
@@ -636,7 +626,7 @@ function checkIfMatching(gem, x, y) {
         }
         
         //update array
-        cleanArray(verticalGem);
+        cleanVerticalArray(verticalGem);
         
         while(verticalGem.length > 0) {
             board.removeChild(verticalGem[0]);
@@ -662,7 +652,7 @@ function checkIfMatching(gem, x, y) {
 }
 
 //cleans the array with the matched gems
-function cleanArray(gemArray) {
+function cleanHorizontalArray(gemArray) {
     let gemSize = id[ASSET_GEM + "1" + ASSET_FILE_TYPE].orig.height;
     let size = gemSize * BOARD_SIZE;
     
@@ -684,19 +674,60 @@ function cleanArray(gemArray) {
         }
     }
     
+    //generate new gems
+    for(let x = 0; x < BOARD_SIZE; x++) {
+        while(gemContainer[x].length < BOARD_SIZE) {
+            gemContainer[x].push(generateGem(determineGem(), x, -1000));
+        }
+    }
+    
+    //slide gems
     for(let x = 0; x < BOARD_SIZE; x++) {
         for(let y = 0; y < BOARD_SIZE; y++) {
-            try {
-                charm.slide(gemContainer[x][y], x*50, size);
-                size-=gemSize;
-            }
-            catch(e) {
-                size-=gemSize;
-            }
-
+            charm.slide(gemContainer[x][y], x*50, size);
+             size-=gemSize;
         }
         size = gemSize * BOARD_SIZE;
     }
+}
+
+function cleanVerticalArray(gemArray) {
+    let gemSize = id[ASSET_GEM + "1" + ASSET_FILE_TYPE].orig.height;
+    let vertical = divide(gemArray[0].x, gemSize);
+    console.log(gemArray[0].x);
+    console.log("Vertical is: " + vertical);
+    
+    let index = 0;
+    let found = false
+
+    while(index < gemContainer[vertical].length) {
+        
+        for(let i = 0; i < gemArray.length; i++) {
+            if(gemArray[i] == gemContainer[vertical][index]) {
+                found = true;
+                gemContainer[vertical].splice(index, 1);
+                
+            }
+        }
+           
+        if(found) {
+            found = false;
+        }
+        else {
+            index++;
+        }
+    }
+    
+    console.log(gemContainer[vertical].length);
+    
+    
+}
+
+function divide(x, size) {
+    if(x == 0) 
+        return 0;
+    else
+        return x / size;
 }
 
 function checkHorizontal(gemType, x, y) {
@@ -756,15 +787,10 @@ function resetGemStatus() {
     
     for(let x = 0; x < BOARD_SIZE; x++ ) {
         for(let y = 0; y < BOARD_SIZE; y++) {
-            try {
-                gemContainer[x][y].checkDown = false;
-                gemContainer[x][y].checkUp = false;
-                gemContainer[x][y].checkLeft = false;
-                gemContainer[x][y].checkRight = false;
-            }
-            catch(e) {
-                
-            }
+            gemContainer[x][y].checkDown = false;
+            gemContainer[x][y].checkUp = false;
+            gemContainer[x][y].checkLeft = false;
+            gemContainer[x][y].checkRight = false;
         }
     }
     
