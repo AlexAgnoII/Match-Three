@@ -24,7 +24,7 @@ const ASSET_CONTAINER = "assets/container.png"
 
 const SPRITE_OFF_SET = 1000;
 const BOARD_SIZE = 8;
-const SCORE_DEFAULT = 300;
+const SCORE_DEFAULT = 100;
 
 let app = new PIXI.Application({ 
     width: 800, 
@@ -674,16 +674,16 @@ function checkIfMatching(gem, x, y) {
 function updateScore(gemCount) {
     
     if(gemCount == 3) {
-        currentScore+= SCORE_DEFAULT;
+        currentScore+= SCORE_DEFAULT*3;
 
     }
     
     if(gemCount == 4) {
-       currentScore+= ((SCORE_DEFAULT+100)*2);
+       currentScore+= ((SCORE_DEFAULT*4)*2);
     }
     
     if(gemCount >= 5) {
-        currentScore+= ((SCORE_DEFAULT+100)*3);
+        currentScore+= ((SCORE_DEFAULT*gemCount)*3);
     }
     
     scoreVal.text = currentScore;
