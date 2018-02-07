@@ -592,26 +592,28 @@ function checkIfMatching(gem, x, y) {
     
 
     if(horizontalGem.length >= 3) {
+        for(let i = 0; i < horizontalGem.length; i++) {
+            charm.scale(horizontalGem[i], 0, 0, 15);
+        }
+        
         while(horizontalGem.length > 0) {
-                console.log(horizontalGem[0].gemType);
-                charm.fadeOut(horizontalGem[0]).onComplete = () => {
-                    //board.removeChild(horizontalGem[0]);
-                    
-                };
-                horizontalGem.splice(0,1);
+            board.removeChild(horizontalGem[0]);
+            horizontalGem.splice(0,1);
         }
             
         didHappen = true;
     } 
         
     if(verticalGem.length >= 3) {
+        for(let i = 0; i < verticalGem.length; i++) {
+            charm.scale(verticalGem[i], 0, 0, 15);
+        }
+
         while(verticalGem.length > 0) {
-            console.log(verticalGem[0].gemType)
-            charm.fadeOut(verticalGem[0]).onComplete = () => {
-                    //board.removeChild(verticalGem[0]);
-            };
+            board.removeChild(verticalGem[0]);
             verticalGem.splice(0,1);
         }
+        
         didHappen = true;
     }
     
