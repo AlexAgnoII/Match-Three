@@ -302,15 +302,25 @@ function initializePlay(){
     timeContainer.position.set(gameWidth/2 + timeContainer.width/3, pauseBtn.y);
     playScene.addChild(timeContainer);
             
-    let timeText = new PIXI.Text("Time remaining: ", createTextStyle(12, "white"));
+    let timeText = new PIXI.Text("Time left: ", createTextStyle(15, "white"));
     timeText.anchor.set(0.5,0.5);
     timeText.position.set(pauseBtn.x - pauseBtn.width * 3, pauseBtn.y);
     playScene.addChild(timeText);
     
-    timeVal = new PIXI.Text(time, createTextStyle(12, "white"));
+    timeVal = new PIXI.Text(time, createTextStyle(15, "white"));
     timeVal.anchor.set(0.5,0.5);
     timeVal.position.set(pauseBtn.x - pauseBtn.width - 45, pauseBtn.y);
     playScene.addChild(timeVal);
+    
+    scoreContainer = new PIXI.Sprite(PIXI.loader.resources[ASSET_CONTAINER].texture)
+    scoreContainer.anchor.set(0.5,0.5);
+    scoreContainer.position.set(timeContainer.x - scoreContainer.width - 30, timeContainer.y);
+    playScene.addChild(scoreContainer);
+    
+    let scoreText = new PIXI.Text("Score: ", createTextStyle(15, "white"));
+    scoreText.anchor.set(0.5,0.5);
+    scoreText.position.set(scoreContainer.x - scoreText.width + 12, scoreContainer.y);
+    playScene.addChild(scoreText);
 
     board = new PIXI.Container();
     createBoard();
