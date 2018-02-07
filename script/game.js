@@ -583,6 +583,7 @@ function swapGems(gem1, gem2) {
                 printBoard();
             } 
         }
+        printBoard();
     }; // charm.slide bracket
 }
 
@@ -596,10 +597,15 @@ function checkIfMatching(gem, x, y) {
     checkVertical(gem.gemType, x, y);
     
 
+    
+
     if(horizontalGem.length >= 3) {
         for(let i = 0; i < horizontalGem.length; i++) {
-            charm.scale(horizontalGem[i], 0, 0, 15);
+            charm.fadeOut(horizontalGem[i], 20);
         }
+        
+        //update array
+        cleanArray(horizontalGem);
         
         while(horizontalGem.length > 0) {
             board.removeChild(horizontalGem[0]);
@@ -611,9 +617,12 @@ function checkIfMatching(gem, x, y) {
         
     if(verticalGem.length >= 3) {
         for(let i = 0; i < verticalGem.length; i++) {
-            charm.scale(verticalGem[i], 0, 0, 15);
+            charm.fadeOut(verticalGem[i], 20);
         }
-
+        
+        //update array
+        cleanArray(verticalGem);
+        
         while(verticalGem.length > 0) {
             board.removeChild(verticalGem[0]);
             verticalGem.splice(0,1);
@@ -635,6 +644,23 @@ function checkIfMatching(gem, x, y) {
     console.log("Vertical(NEW): " + verticalGem.length)
     
     return didHappen;
+}
+
+//cleans the array with the matched gems
+function cleanArray(gemArray) {
+    for(let x = 0; x < BOARD_SIZE; x++) {
+        for(let y = 0; y < BOARD_SIZE; y++) {
+            
+            for(let i = 0; i < gemArray.length; i++) {
+                
+                if(gemArray[i] == gemContainer[x][y]) {
+                    gemContainer[x].splice(y, 1);
+                    gemContainer[x].push(0);
+                }
+                
+            }
+        }
+    }
 }
 
 function checkHorizontal(gemType, x, y) {
@@ -694,10 +720,15 @@ function resetGemStatus() {
     
     for(let x = 0; x < BOARD_SIZE; x++ ) {
         for(let y = 0; y < BOARD_SIZE; y++) {
-            gemContainer[x][y].checkDown = false;
-            gemContainer[x][y].checkUp = false;
-            gemContainer[x][y].checkLeft = false;
-            gemContainer[x][y].checkRight = false;
+            try {
+                gemContainer[x][y].checkDown = false;
+                gemContainer[x][y].checkUp = false;
+                gemContainer[x][y].checkLeft = false;
+                gemContainer[x][y].checkRight = false;
+            }
+            catch(e) {
+                
+            }
         }
     }
     
