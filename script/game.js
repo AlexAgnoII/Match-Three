@@ -11,12 +11,7 @@ const ASSET_BG ="asset_bg.png";
 const ASSET_BUTTON_DOWN = "asset_button_down.png";
 const ASSET_BUTTON_UP = "asset_button_up.png";
 const ASSET_GAMEOVER_POPUP = "asset_gameover_popup.png";
-const ASSET_GEM1 = "asset_gem1.png";
-const ASSET_GEM2 = "asset_gem2.png";
-const ASSET_GEM3 = "asset_gem3.png";
-const ASSET_GEM4 = "asset_gem4.png";
-const ASSET_GEM5 = "asset_gem5.png";
-const ASSET_GEM6 = "asset_gem6.png";
+const ASSET_GEM = "asset_gem";
 const ASSET_LARGE_BTN_DOWN = "asset_large_btn_down.png";
 const ASSET_LARGE_BTN_UP = "asset_large_btn_up.png";
 const ASSET_PAUSE_MENU = "asset_pause_menu.png";
@@ -24,8 +19,10 @@ const ASSET_PAUSE_UP = "asset_pause_up.png";
 const ASSET_PAUSE_DOWN = "asset_pause_down.png";
 const ASSET_TITLE = "asset_title.png";
 const ASSET_TITLE_BG = "asset_title_bg.png";
+const ASSET_FILE_TYPE = ".png";
 
 const SPRITE_OFF_SET = 1000;
+const BOARD_SIZE = 8;
 
 let app = new PIXI.Application({ 
     width: 800, 
@@ -51,15 +48,19 @@ let playScene,
     playBG,
     pauseBtn,
     pauseMenu,
-    scoreText,
     scoreVal,
-    timeText,
     timeVal,
     blackBackground,
     pauseContainer,
     resumeBtn,
     restartBtn,
     quitBtn;
+
+//
+let board,// contains the gem
+    gemContainer = [],
+    clickContainer = [];//remembers which gem you've clicked 
+    
 
 //end
 let endScene,
@@ -233,7 +234,12 @@ function initializePlay(){
     let actionRestart = () => { //reseting required here
         charm.scale(pauseContainer, 1.1, 1.1, 5).onComplete = () =>
         charm.scale(pauseContainer, 0, 0, 5).onComplete = () => {
+            timerOn = true;
             blackBackground.alpha = 0;
+            editButtonActive(resumeBtn, false);
+            editButtonActive(restartBtn, false);
+            editButtonActive(quitBtn, false);
+            editButtonActive(pauseBtn, true);
             state = play;
         };
         console.log("restart");
@@ -255,8 +261,6 @@ function initializePlay(){
         }
     }
     
-    let actionPressGem;
-    
     
     playScene = new PIXI.Container();
     playScene.alpha = 0;
@@ -277,8 +281,8 @@ function initializePlay(){
                             id[ASSET_PAUSE_UP],
                             actionPause);
 
-        
-    timeText = new PIXI.Text("Time remaining: ", createTextStyle(15, "white"));
+            
+    let timeText = new PIXI.Text("Time remaining: ", createTextStyle(15, "white"));
     timeText.anchor.set(0.5,0.5);
     timeText.position.set(pauseBtn.x - pauseBtn.width * 3, pauseBtn.y);
     playScene.addChild(timeText);
@@ -326,6 +330,7 @@ function initializePlay(){
                        "Quit",
                         pauseContainer);
 
+    /*********************TEMPORARY***************************/
     let pauseText = new PIXI.Text("Paused", createTextStyle(20, "white"));
     pauseText.anchor.set(0.5,0.5);
     pauseText.position.set(0, -(pauseText.height*5) + 5);
@@ -344,8 +349,98 @@ function initializePlay(){
     });
     
     playScene.addChild(testButton);
-
+    /*********************TEMPORARY***************************/
+    
+    board = new PIXI.Container();
+    
+    createBoard();
+    board.position.set((gameWidth/2) + 25, 
+                       (gameHeight/2) + 50
+                      );
+    playScene.addChild(board);
+    board.pivot.x = board.width/2;
+    board.pivot.y = board.height/2;
+    
+    //test
+    printBoard();
+    //test
+    
     playScene.visible = false;
+}
+
+function printBoard() {
+    let aString = "";
+    
+    for(let x = 0; x < BOARD_SIZE; x++) {
+        for(let y = 0; y < BOARD_SIZE; y++) {
+            aString+=gemContainer[x][y].gemType + "|";
+        }
+        aString+="\n";
+    }
+    
+    console.log(aString);
+}
+
+function createBoard() {
+    let xReal = 0;
+    let yReal = 0;  
+    let gemSize = id[ASSET_GEM + "1.png"].orig.height; //width and height is the same.
+    
+    for(let x = 0; x < BOARD_SIZE; x++) {
+        gemContainer.push([])
+        
+        for(let y = 0; y < BOARD_SIZE; y++) {
+            gemContainer[x].push(generateGem(determineGem(), xReal, yReal));
+            yReal += gemSize;
+        }
+        
+        yReal = 0;
+        xReal+= gemSize;
+    }
+    console.log(gemContainer);
+}
+
+function determineGem() {
+    let randomNumber = Math.floor((Math.random() * 120) + 1);
+    
+    //Purple Triangle GEM_1
+    if(randomNumber >= 1 && randomNumber <= 30) {
+        return 1;
+    }
+    //Green Pentagon GEM_2
+    else if(randomNumber >= 31 && randomNumber <= 50) {
+        return 2;
+    }
+    //Red Square GEM_3
+    else if(randomNumber >= 51 && randomNumber <= 80) {
+        return 3;
+    }
+    //orange heptagon GEM_4
+    else if(randomNumber >= 81 && randomNumber <= 100) {
+        return 4;
+    }
+    //blue Diamon GEM_5
+    else if(randomNumber >= 101 && randomNumber <= 110) {
+        return 5;
+    }
+    //yellow Octagon GEM_6
+    else {
+        return 6;
+    }
+}
+
+function generateGem(gemNum, x, y) {
+    //Create the gem.
+    let gem = new PIXI.Sprite(id[ASSET_GEM + gemNum + ASSET_FILE_TYPE]);
+    
+    //set type
+    gem.gemType = gemNum;
+    gem.anchor.set(0.5,0.5);
+    gem.position.set(x, y);
+    board.addChild(gem);
+    
+    return gem;
+    
 }
 
 function setMenuButtons(button,
