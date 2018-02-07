@@ -573,14 +573,19 @@ function swapGems(gem1, gem2) {
         }
         
         if(count == 0) { //Revert.
-            console.log("MUST REVERT");
-        } 
+            charm.slide(gem1, gem1Orig[0], gem1Orig[1], 10).onComplete;
+            charm.slide(gem2, gem2Orig[0], gem2Orig[1], 10).onComplete = () => {
+                returnToNormalScale();  
 
+                swapGemInArray(gem1, gem2Coor[0], gem2Coor[1],
+                               gem2, gem1Coor[0], gem1Coor[1]);
 
-        
-        
+                printBoard();
+            } 
+        }
     }; // charm.slide bracket
 }
+
 
 function checkIfMatching(gem, x, y) {
     
