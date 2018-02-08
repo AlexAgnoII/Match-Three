@@ -98,8 +98,8 @@ function setup() {
     id = PIXI.loader.resources[MATCH_THREE_ATLAS].textures; 
     gameHeight = id[ASSET_TITLE_BG].orig.height;
     gameWidth = id[ASSET_TITLE_BG].orig.width;
-    console.log("Height: " + gameHeight)
-    console.log("Width: " + gameWidth)
+//    console.log("Height: " + gameHeight)
+//    console.log("Width: " + gameWidth)
     app.renderer.autoResize = true;
     app.renderer.resize(gameWidth, gameHeight);
 
@@ -210,6 +210,7 @@ function play(){
        blackBackground.alpha = 0.5;
        setAllGemActive(false);
        endScoreVal.text = currentScore;
+       setAllGemActive(false);
        state = end;
     }
     
@@ -226,7 +227,7 @@ function initializePlay(){
         
         charm.scale(pauseContainer, 1.1, 1.1, 5).onComplete = () =>
         charm.scale(pauseContainer, 1, 1, 5).onComplete = () => {
-           console.log("Pause!") 
+           //console.log("Pause!") 
            editButtonActive(resumeBtn, true);
            editButtonActive(restartBtn, true);
            editButtonActive(quitBtn, true);
@@ -240,7 +241,7 @@ function initializePlay(){
         charm.scale(pauseContainer, 1.1, 1.1, 5).onComplete = () =>
         charm.scale(pauseContainer, 0, 0, 5).onComplete = () => {
            blackBackground.alpha = 0;  
-           console.log("Resume!") 
+           //console.log("Resume!") 
            editButtonActive(resumeBtn, false);
            editButtonActive(restartBtn, false);
            editButtonActive(quitBtn, false);
@@ -263,14 +264,14 @@ function initializePlay(){
             restartPlay();
             state = play;
         };
-        console.log("restart");
+        //console.log("restart");
     }
     
     let actionQuit = () => {//reseting required here
         charm.scale(pauseContainer, 1.1, 1.1, 5).onComplete = () =>
         charm.scale(pauseContainer, 0, 0, 5).onComplete = () => {
            blackBackground.alpha = 0;  
-           console.log("Quit!") 
+           //console.log("Quit!") 
            editButtonActive(resumeBtn, false);
            editButtonActive(restartBtn, false);
            editButtonActive(quitBtn, false);
@@ -406,7 +407,7 @@ function printBoard() {
         aString+="\n";
     }
     
-    console.log(aString);
+    //console.log(aString);
 }
 
 function createBoard() {
@@ -425,7 +426,7 @@ function createBoard() {
         yReal = gemSize * BOARD_SIZE;
         xReal+= gemSize;
     }
-    console.log(gemContainer);
+    //console.log(gemContainer);
 }
 
 function determineGem() {
@@ -492,18 +493,18 @@ function setGemActive(gem, active) {
 
 function gemOnClick(gem) {
     gem.on("pointerup", () => {
-       console.log(gem.gemType); 
+       //console.log(gem.gemType); 
        setAllGemActive(false);
        //When Clicked, show some small animation
        charm.scale(gem, 1.5,1.5,10).onComplete = ()=> 
        charm.scale(gem, 1.2,1.2, 10).onComplete= () => {
             
            if(!clickContainer.includes(gem)) {
-               console.log("Not yet in.")
+               //console.log("Not yet in.")
                clickContainer.push(gem);
            }
            else {
-               console.log("Already in.");
+               //console.log("Already in.");
            }
 
            
@@ -514,7 +515,7 @@ function gemOnClick(gem) {
                 if( (Math.abs(clickContainer[0].y - clickContainer[1].y) == 50 && Math.abs(clickContainer[0].x - clickContainer[1].x) == 0) || //user chose horizontal difference.
                     (Math.abs(clickContainer[0].x - clickContainer[1].x) == 50 && Math.abs(clickContainer[0].y - clickContainer[1].y) == 0)    //user chose vertical difference.
                   ) {
-                    console.log("Together!")
+                    //console.log("Together!")
                     
                     //if together, swap places.
                     swapGems(clickContainer[0], clickContainer[1]);
@@ -522,13 +523,13 @@ function gemOnClick(gem) {
                 }
 
                 else {
-                    console.log("NOT TOGETHER");
+                    //console.log("NOT TOGETHER");
                     returnToNormalScale();
                 }
             }
            
             setAllGemActive(true);
-            console.log("Gems clicked: "+ clickContainer.length);
+            //console.log("Gems clicked: "+ clickContainer.length);
        };
     });
     
@@ -562,16 +563,16 @@ function swapGems(gem1, gem2) {
         for (let x = 0; x < BOARD_SIZE; x++) {
             for (let y = 0; y < BOARD_SIZE; y++) {
                 if(gem1 == gemContainer[x][y]) {
-                    console.log("True(1): ");
-                    console.log("Gemtype: " + gemContainer[x][y].gemType);
-                    console.log("X|Y: " + x + "|" + y);
+//                    console.log("True(1): ");
+//                    console.log("Gemtype: " + gemContainer[x][y].gemType);
+//                    console.log("X|Y: " + x + "|" + y);
                     gem1Coor.push(x);
                     gem1Coor.push(y);
                 }
                 else if(gem2 == gemContainer[x][y]) {
-                    console.log("True(2): ");
-                    console.log("Gemtype: " + gemContainer[x][y].gemType);
-                    console.log("X|Y: " + x + "|" + y);
+//                    console.log("True(2): ");
+//                    console.log("Gemtype: " + gemContainer[x][y].gemType);
+//                    console.log("X|Y: " + x + "|" + y);
                     gem2Coor.push(x);
                     gem2Coor.push(y);
                 }
@@ -657,16 +658,16 @@ function checkIfMatching(gem, x, y) {
         
     scoreVal.text = currentScore; //update score
     resetGemStatus(); // resets all gem to have false.
-    console.log("Horizontal: " + horizontalGem.length)
-    console.log("Vertical: " + verticalGem.length)
+//    console.log("Horizontal: " + horizontalGem.length)
+//    console.log("Vertical: " + verticalGem.length)
     
     if(horizontalGem.length > 0)
         horizontalGem.splice(0,horizontalGem.length);
     if(verticalGem.length > 0)
         verticalGem.splice(0, verticalGem.length);
 
-    console.log("Horizontal(NEW): " + horizontalGem.length)
-    console.log("Vertical(NEW): " + verticalGem.length)
+//    console.log("Horizontal(NEW): " + horizontalGem.length)
+//    console.log("Vertical(NEW): " + verticalGem.length)
     
     return didHappen;
 }
@@ -899,10 +900,10 @@ function restartPlay() {
     timerOn = false;
     time = 60;
     timeVal.text = time;
-    console.log("On restart: ");
-    console.log(gemContainer);
-    console.log("TimerOn: " + timerOn);
-    console.log("TimesUp: " + timesUp);
+//    console.log("On restart: ");
+//    console.log(gemContainer);
+//    console.log("TimerOn: " + timerOn);
+//    console.log("TimesUp: " + timesUp);
     currentScore = 0;
     scoreVal.text = currentScore;
     restart = true;
@@ -912,10 +913,10 @@ function restartPlay() {
 function end(){
     if(endScene.visible == false) {
         endScene.visible = true;
-        console.log(endGameContainer.y)
+//        console.log(endGameContainer.y)
         charm.slide(endGameContainer, (endGameContainer.x), (gameHeight/2 + 15), 15).onComplete = () => 
         charm.slide(endGameContainer, (endGameContainer.x), (gameHeight/2), 15).onComplete = () => {
-            console.log("end") 
+//            console.log("end") 
             editButtonActive(endRestartBtn, true);
             editButtonActive(endQuitBtn, true);
         }
@@ -939,7 +940,7 @@ function initializeEnd(){
         };
     };
     let actionRestart = () => {//reseting required here
-        console.log("restart")
+//        console.log("restart")
         editButtonActive(endRestartBtn, false);
         editButtonActive(endQuitBtn, false);
         charm.slide(endGameContainer, endGameContainer.x, (gameHeight/2 + 15), 15).onComplete = () => 
