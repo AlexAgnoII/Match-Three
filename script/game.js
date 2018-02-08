@@ -83,6 +83,7 @@ let time = 60;
 let ctr = 0;
 let timerOn = false;
 let timesUp = false;
+let restart = false;
 
 
 
@@ -191,9 +192,9 @@ function initializeTitle() {
 }
 
 function play(){
-    if(playScene.visible == false) {
+    if(playScene.visible == false || restart == true) {
         playScene.visible = true;
-        
+        restart = false;
         charm.fadeIn(playScene, 30).onComplete = () => {
             editButtonActive(pauseBtn, true);
             setAllGemActive(true);
@@ -259,6 +260,7 @@ function initializePlay(){
             editButtonActive(quitBtn, false);
             editButtonActive(pauseBtn, true);
             setAllGemActive(true);
+            restartPlay();
             state = play;
         };
         console.log("restart");
@@ -272,9 +274,9 @@ function initializePlay(){
            editButtonActive(resumeBtn, false);
            editButtonActive(restartBtn, false);
            editButtonActive(quitBtn, false);
-            
            charm.fadeOut(playScene, 30).onComplete = () => {
                playScene.visible = false;
+               restartPlay();    
                state = title;
            }
         }
@@ -478,10 +480,7 @@ function generateGem(gemNum, x, y) {
 function setAllGemActive(active) {
     for(let x = 0; x < BOARD_SIZE; x++) {
         for(let y = 0; y < BOARD_SIZE; y++) {
-
             setGemActive(gemContainer[x][y], active);
-
-
         }
     }
 }
@@ -655,7 +654,8 @@ function checkIfMatching(gem, x, y) {
         
         didHappen = true;
     }
-    
+        
+    scoreVal.text = currentScore; //update score
     resetGemStatus(); // resets all gem to have false.
     console.log("Horizontal: " + horizontalGem.length)
     console.log("Vertical: " + verticalGem.length)
@@ -685,8 +685,6 @@ function updateScore(gemCount) {
     if(gemCount >= 5) {
         currentScore+= ((SCORE_DEFAULT*gemCount)*3);
     }
-    
-    scoreVal.text = currentScore;
 }
 
 //cleans the array with the matched gems
@@ -882,6 +880,35 @@ function setMenuButtons(button,
     container.addChild(text);
 }
 
+//Restarts:
+//-Board gems
+//-Timer
+//-Score
+function restartPlay() {
+    for(let x = 0; x < gemContainer.length; x++) {
+        for(let y = 0; y < gemContainer[x].length; y++) {
+            board.removeChild(gemContainer[x][y]);
+        }
+    }
+    
+    gemContainer.splice(0, gemContainer.length);
+    horizontalGem.splice(0, horizontalGem.length);
+    verticalGem.splice(0, verticalGem.length);
+    clickContainer.splice(0, clickContainer.length);
+    timesUp = false;
+    timerOn = false;
+    time = 60;
+    timeVal.text = time;
+    console.log("On restart: ");
+    console.log(gemContainer);
+    console.log("TimerOn: " + timerOn);
+    console.log("TimesUp: " + timesUp);
+    currentScore = 0;
+    scoreVal.text = currentScore;
+    restart = true;
+    createBoard();
+}
+
 function end(){
     if(endScene.visible == false) {
         endScene.visible = true;
@@ -905,9 +932,9 @@ function initializeEnd(){
         charm.slide(endGameContainer, endGameContainer.x, -SPRITE_OFF_SET, 15).onComplete = () => 
         charm.fadeOut(playScene, 30).onComplete = () => {
             blackBackground.alpha = 0;
-            state = title;
             playScene.visible = false;
             endScene.visible = false;
+            restartPlay();
             state = title;
         };
     };
@@ -919,6 +946,7 @@ function initializeEnd(){
         charm.slide(endGameContainer, endGameContainer.x, -SPRITE_OFF_SET, 15).onComplete = () => {
             blackBackground.alpha = 0;
             endScene.visible = false;
+            restartPlay();
             state = play;
         };
     };
