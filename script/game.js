@@ -487,6 +487,19 @@ function findClusters() {
     
 }
 
+function findMoves() {
+    moves = [];
+    
+    //check for vertical swaps
+    for(let ) {
+        
+    }
+}
+        
+function swap() {
+        
+}
+
 function resolveClusters() {
 
     findClusters();
