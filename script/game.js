@@ -79,7 +79,7 @@ let endScene,
 
 //timer
 let currentScore = 0;
-let time = 999;
+let time = 60;
 let ctr = 0;
 let timerOn = false;
 let timesUp = false;
@@ -88,6 +88,7 @@ let restart = false;
 
 let moves = [];
 let clusters = [];
+let allowScore = false;
 
 
 
@@ -203,6 +204,7 @@ function play(){
             editButtonActive(pauseBtn, true);
             setAllGemActive(true);
             timerOn = true;
+            allowScore = true;
         };
     }
     
@@ -314,12 +316,12 @@ function initializePlay(){
             
     let timeText = new PIXI.Text("Time left: ", createTextStyle(15, "white"));
     timeText.anchor.set(0.5,0.5);
-    timeText.position.set(pauseBtn.x - pauseBtn.width * 3, pauseBtn.y);
+    timeText.position.set(pauseBtn.x - pauseBtn.width * 3 - 18, pauseBtn.y);
     playScene.addChild(timeText);
     
     timeVal = new PIXI.Text(time, createTextStyle(15, "white"));
     timeVal.anchor.set(0.5,0.5);
-    timeVal.position.set(pauseBtn.x - pauseBtn.width - 45, pauseBtn.y);
+    timeVal.position.set(pauseBtn.x - pauseBtn.width - 35, pauseBtn.y);
     playScene.addChild(timeVal);
     
     scoreContainer = new PIXI.Sprite(PIXI.loader.resources[ASSET_CONTAINER].texture)
@@ -563,6 +565,8 @@ function removeClusters() {
             index++;
             ctr++;
         }
+        if(allowScore)
+            updateScore(clusters[i].length);
     }
     
     for(let x = 0; x < BOARD_SIZE; x++) {
@@ -591,6 +595,8 @@ function shiftTiles() {
                 gemContainer[x][y] = generateGem(determineGem(), x*gemSize, -200);
                 lastGem = gemContainer[x][y];
                 board.addChild(gemContainer[x][y]);
+                gemContainer[x][y].interactive = true;
+                gemContainer[x][y].buttonMode = true;
             }
             else {
                 let shift = gemContainer[x][y].shift;
@@ -891,20 +897,19 @@ function swapGems(gem1, gem2) {
 }
 
 
-function updateScore(gemCount) {
+function updateScore(matchLength) {
     
-    if(gemCount == 3) {
-        currentScore+= SCORE_DEFAULT*3;
-
+    if(matchLength == 3) {
+        currentScore += SCORE_DEFAULT;
+    }
+    else if (matchLength == 4) {
+        currentScore += SCORE_DEFAULT*2
+    }
+    else if(matchLength >=5) {
+        currentScore += SCORE_DEFAULT*3;
     }
     
-    if(gemCount == 4) {
-       currentScore+= ((SCORE_DEFAULT*4)*2);
-    }
-    
-    if(gemCount >= 5) {
-        currentScore+= ((SCORE_DEFAULT*gemCount)*3);
-    }
+    scoreVal.text = currentScore;
 }
 
 
@@ -951,9 +956,8 @@ function restartPlay() {
     }
     
     gemContainer.splice(0, gemContainer.length);
-    horizontalGem.splice(0, horizontalGem.length);
-    verticalGem.splice(0, verticalGem.length);
     clickContainer.splice(0, clickContainer.length);
+    allowScore = false;
     timesUp = false;
     timerOn = false;
     time = 60;
