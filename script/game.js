@@ -340,7 +340,7 @@ function initializePlay(){
     board = new PIXI.Container();
     createBoard();
     board.position.set((gameWidth/2) + 25, 
-                       (gameHeight/2) + 50);
+                       (gameHeight/2) + 150);
     playScene.addChild(board);
     board.pivot.x = board.width/2;
     board.pivot.y = board.height/2;
@@ -534,8 +534,6 @@ function swap(x1,y1, x2,y2) {
     let gem = gemContainer[x1][y1];
     gemContainer[x1][y1] = gemContainer[x2][y2];
     gemContainer[x2][y2] = gem;
-    
-    
 }
 
 function removeClusters() {
@@ -582,35 +580,31 @@ function removeClusters() {
     }
 }
 
+let lastGem;
 function shiftTiles() {
+    lastGem = null;
     let gemSize = id[ASSET_GEM + "1.png"].orig.height; //width and height is the same.
     for(let x = 0; x < BOARD_SIZE; x++) {
         for(let y = 0; y < BOARD_SIZE; y++) {
             
             if(gemContainer[x][y].gemType == -1) {
-                gemContainer[x][y] = generateGem(determineGem(), x*gemSize, -1000)
+                gemContainer[x][y] = generateGem(determineGem(), x*gemSize, -200);
+                lastGem = gemContainer[x][y];
+                board.addChild(gemContainer[x][y]);
             }
             else {
                 let shift = gemContainer[x][y].shift;
                 
                 if(shift > 0) {
                     swap(x,y, x, y-shift);
-                    gemContainer[x][y-shift].position.set(x*gemSize, (BOARD_SIZE-1)*gemSize - ((y-shift)*gemSize));
+                    //gemContainer[x][y-shift].position.set(x*gemSize, (BOARD_SIZE-1)*gemSize - ((y-shift)*gemSize));
                 }
             }
             
             gemContainer[x][y].shift = 0;
         }
     }
-    
-    for(let x = 0; x < BOARD_SIZE; x++) {
-        for(let y = 0; y < BOARD_SIZE; y++) {
-            if(gemContainer[x][y].y < 0) {
-                gemContainer[x][y].position.set(x*gemSize, (BOARD_SIZE-1)*gemSize - (y*gemSize));
-                board.addChild(gemContainer[x][y]);
-            }
-        }
-    }
+
 }
 
 function makeHole(x,y) {
@@ -618,18 +612,66 @@ function makeHole(x,y) {
 }
 
 function resolveClusters() {
-
+    let gemSize = id[ASSET_GEM + "1.png"].orig.height;
     findClusters();
-    let ctr = 0;
-    while(clusters.length > 0) {
+    //let ctr = 0;
+    //while(clusters.length > 0) {
         
-        removeClusters();
-         shiftTiles();
-        findClusters();
-        ctr++;
+    removeClusters();
+    shiftTiles();
+    //findClusters();
+        //ctr++;
+    //}
+    for(let x = 0; x < BOARD_SIZE; x++) {
+        for(let y = 0; y < BOARD_SIZE; y++) {
+            //if(gemContainer[x][y].y == 0) {
+                //gemContainer[x][y].position.set(x*gemSize, (BOARD_SIZE-1)*gemSize - (y*gemSize));
+                //board.addChild(gemContainer[x][y]);
+                console.log(lastGem);
+                if(lastGem == gemContainer[x][y]) {
+                    console.log("LAST")
+                    charm.slide(gemContainer[x][y], x*gemSize, (BOARD_SIZE-1)*gemSize - (y*gemSize), 25).onComplete = () =>{
+                        findClusters();
+                        if(clusters.length >0) {
+                            console.log("Done!");
+                            resolveClusters();
+                        }
+                        else {
+                            checkIfYouCanHaveMove();
+                        }
+                    };
+                }
+                else {
+                    charm.slide(gemContainer[x][y], x*gemSize, (BOARD_SIZE-1)*gemSize - (y*gemSize), 25);
+                }
+            //}
+        }
     }
-    console.log("resolve count: " + ctr);
+    console.log("resolve");
+    console.log(board.height);
+    console.log(board.width);
     
+}
+
+function checkIfYouCanHaveMove() {
+    let done = false;
+    findMoves();
+    if(moves.length > 0) {
+            console.log("Done!");
+            done = true;
+    }
+//        
+    else {
+        console.log("Oh no, reset!")
+        for(let x = 0; x < BOARD_SIZE; x++) {
+             while(gemContainer[x].length > 0) {
+                board.removeChild(gemContainer[x][0]);
+                gemContainer[x].splice(0, 1);
+            }   
+        }
+        gemContainer = [];
+        createBoard();
+    }
 }
 
 function createBoard() {
@@ -638,7 +680,7 @@ function createBoard() {
     let yReal = gemSize * (BOARD_SIZE-1); 
     let done = false;
     
-    while(!done) {
+    //while(!done) {
         for(let x = 0; x < BOARD_SIZE; x++) {
             gemContainer.push([])
 
@@ -654,26 +696,26 @@ function createBoard() {
         }
 
         resolveClusters();
-        findMoves();    
-//        console.log(clusters);
-        console.log(moves);
-        
-        if(moves.length > 0) {
-            console.log("Done!");
-            done = true;
-        }
+//        findMoves();    
+////        console.log(clusters);
+//        console.log(moves);
 //        
-        else {
-            console.log("Oh no, reset!")
-            for(let x = 0; x < BOARD_SIZE; x++) {
-                while(gemContainer[x].length > 0) {
-                  board.removeChild(gemContainer[x][0]);
-                  gemContainer[x].splice(0, 1);
-                }   
-            }
-            gemContainer = [];
-        }
-      }
+//        if(moves.length > 0) {
+//            console.log("Done!");
+//            done = true;
+//        }
+////        
+//        else {
+//            console.log("Oh no, reset!")
+//            for(let x = 0; x < BOARD_SIZE; x++) {
+//                while(gemContainer[x].length > 0) {
+//                  board.removeChild(gemContainer[x][0]);
+//                  gemContainer[x].splice(0, 1);
+//                }   
+//            }
+//            gemContainer = [];
+//        }
+     // }
 //    console.log(gemContainer);
 }
 
@@ -824,10 +866,15 @@ function swapGems(gem1, gem2) {
 
         swapGemInArray(gem1, gem1Coor[0], gem1Coor[1],
                        gem2, gem2Coor[0], gem2Coor[1]);
-
-
         
-        if(/*count == 0*/true) { //Revert.
+        //find if there's any clusters.
+        findClusters();
+        if(clusters.length > 0 ) { //there's clusters! {
+            console.log("THERE IS A MATCH")
+            resolveClusters();
+        }
+    
+        else { //Revert.
             charm.slide(gem1, gem1Orig[0], gem1Orig[1], 10).onComplete;
             charm.slide(gem2, gem2Orig[0], gem2Orig[1], 10).onComplete = () => {
                 returnToNormalScale();  
