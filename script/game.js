@@ -340,7 +340,7 @@ function initializePlay(){
     board = new PIXI.Container();
     createBoard();
     board.position.set((gameWidth/2) + 25, 
-                       (gameHeight/2));
+                       (gameHeight/2) + 50);
     playScene.addChild(board);
     board.pivot.x = board.width/2;
     board.pivot.y = board.height/2;
@@ -355,7 +355,7 @@ function initializePlay(){
 
     
     //test
-    //printBoard();
+    printBoard();
     //test
 
     pauseContainer = new PIXI.Container();
@@ -405,7 +405,7 @@ function printBoard() {
     
     for(let x = 0; x < BOARD_SIZE; x++) {
         for(let y = 0; y < BOARD_SIZE; y++) {
-            aString+=gemContainer[x][y].gemType + "|" /*+ "(" + gemContainer[x][y].x +"|" + gemContainer[x][y].y + ")  "*/;
+            aString+=gemContainer[x][y].gemType + "|" + "(" + gemContainer[x][y].x +"|" + gemContainer[x][y].y + ")  ";
 
         }
         aString+="\n";
@@ -527,7 +527,7 @@ function findMoves() {
 
     }
     
-    //clusters = [];
+    clusters = [];
 }
         
 function swap(x1,y1, x2,y2) {
@@ -539,11 +539,11 @@ function swap(x1,y1, x2,y2) {
 }
 
 function removeClusters() {
+    //Code that turns all clusters that turns gems to -1
     for(let i = 0; i < clusters.length; i++) {
         let index;
         let ctr = 0;
         
-
         if(clusters[i].horizontal) {
             index = clusters[i].row;
         }
@@ -565,11 +565,52 @@ function removeClusters() {
             index++;
             ctr++;
         }
-        
-        
-
     }
     
+    for(let x = 0; x < BOARD_SIZE; x++) {
+        let shift = 0;
+        for(let y = 0; y < BOARD_SIZE; y++) {
+            if(gemContainer[x][y].gemType == -1) {
+                shift++;
+                gemContainer[x][y].shift = 0;
+                board.removeChild(gemContainer[x][y]);
+            }
+            else {
+                gemContainer[x][y].shift = shift;
+            }
+        }
+    }
+}
+
+function shiftTiles() {
+    let gemSize = id[ASSET_GEM + "1.png"].orig.height; //width and height is the same.
+    for(let x = 0; x < BOARD_SIZE; x++) {
+        for(let y = 0; y < BOARD_SIZE; y++) {
+            
+            if(gemContainer[x][y].gemType == -1) {
+                gemContainer[x][y] = generateGem(determineGem(), x*gemSize, -1000)
+            }
+            else {
+                let shift = gemContainer[x][y].shift;
+                
+                if(shift > 0) {
+                    swap(x,y, x, y-shift);
+                    gemContainer[x][y-shift].position.set(x*gemSize, (BOARD_SIZE-1)*gemSize - ((y-shift)*gemSize));
+                }
+            }
+            
+            gemContainer[x][y].shift = 0;
+        }
+    }
+    
+    for(let x = 0; x < BOARD_SIZE; x++) {
+        for(let y = 0; y < BOARD_SIZE; y++) {
+            if(gemContainer[x][y].y < 0) {
+                gemContainer[x][y].position.set(x*gemSize, (BOARD_SIZE-1)*gemSize - (y*gemSize));
+                board.addChild(gemContainer[x][y]);
+            }
+        }
+    }
 }
 
 function makeHole(x,y) {
@@ -583,8 +624,9 @@ function resolveClusters() {
 //    while(clusters.length > 0) {
 //        
         removeClusters();
-//        
-//        shiftTiles();
+        printBoard();
+         shiftTiles();
+
 //        
 //        findClusters();
 //    }
@@ -594,7 +636,7 @@ function resolveClusters() {
 function createBoard() {
     let gemSize = id[ASSET_GEM + "1.png"].orig.height; //width and height is the same.
     let xReal = 0;
-    let yReal = gemSize * BOARD_SIZE; 
+    let yReal = gemSize * (BOARD_SIZE-1); 
     let done = false;
     
     //while(done) {
@@ -602,11 +644,13 @@ function createBoard() {
             gemContainer.push([])
 
             for(let y = 0; y < BOARD_SIZE; y++) {
-                gemContainer[x].push(generateGem(determineGem(), xReal, yReal));
+                let gem = generateGem(determineGem(), xReal, yReal);
+                gemContainer[x].push(gem);
                 yReal -= gemSize;
+                board.addChild(gem);
             }
 
-            yReal = gemSize * BOARD_SIZE;
+            yReal = gemSize * (BOARD_SIZE-1);
             xReal+= gemSize;
         }
 
@@ -622,7 +666,6 @@ function createBoard() {
 //            gemContainer.splice(0, gemContainer.length);
 //        }
    // }
-    printBoard();
     console.log(gemContainer);
 }
 
@@ -666,7 +709,6 @@ function generateGem(gemNum, x, y) {
     gem.position.set(x, y);
     gemOnClick(gem);
     setGemActive(gem, false);
-    board.addChild(gem);
     
     gem.checkUp = false;
     gem.checkDown = false;
@@ -780,7 +822,7 @@ function swapGems(gem1, gem2) {
         swapGemInArray(gem1, gem1Coor[0], gem1Coor[1],
                        gem2, gem2Coor[0], gem2Coor[1]);
 
-//        //printBoard();
+        //printBoard();
 //        
 //        let count = 0;
 //        
