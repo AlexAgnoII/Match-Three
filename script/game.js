@@ -483,21 +483,57 @@ function findClusters() {
         }
     }
     
-    console.log(clusters);
-    
 }
 
 function findMoves() {
     moves = [];
     
     //check for vertical swaps
-    for(let ) {
-        
+    for(let x = 0; x < BOARD_SIZE; x++) {
+        for(let y = 0; y < BOARD_SIZE-1; y++) {
+            swap(x,y, x, y+1);
+            findClusters();
+            swap(x,y, x, y+1);
+            
+            
+            if (clusters.length > 0) {
+                // Found a move
+                moves.push({column1: y, 
+                            row1: x,
+                            column2: y+1, 
+                            row2: x});
+            }
+        }
     }
+    
+    //check horizontal swaps
+    for(let y = 0; y < BOARD_SIZE; y++) {
+        for(let x = 0; x < BOARD_SIZE-1; x++) {
+            swap(x, y, x+1, y);
+            findClusters();
+            swap(x, y, x+1, y);
+            
+            if (clusters.length > 0) {
+                // Found a move
+                moves.push({column1: y, 
+                            row1: x,
+                            column2: y, 
+                            row2: x+1});
+            }
+        }
+        
+
+    }
+    
+    clusters = [];
 }
         
-function swap() {
-        
+function swap(x1,y1, x2,y2) {
+    let gem = gemContainer[x1][y1];
+    gemContainer[x1][y1] = gemContainer[x2][y2];
+    gemContainer[x2][y2] = gem;
+    
+    
 }
 
 function resolveClusters() {
@@ -535,7 +571,9 @@ function createBoard() {
         }
 
         resolveClusters();
-//        findMoves();
+        findMoves();    
+        console.log(clusters);
+        console.log(moves);
 //        
 //        if(moves.length > 0) {
 //            done = true;
