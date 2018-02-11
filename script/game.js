@@ -25,6 +25,7 @@ const ASSET_CONTAINER = "assets/container.png"
 const SPRITE_OFF_SET = 1000;
 const BOARD_SIZE = 8;
 const SCORE_DEFAULT = 100;
+const TIME_VALUE = 10;
 
 let app = new PIXI.Application({ 
     width: 800, 
@@ -79,7 +80,7 @@ let endScene,
 
 //timer
 let currentScore = 0;
-let time = 60;
+let time = TIME_VALUE;
 let ctr = 0;
 let timerOn = false;
 let timesUp = false;
@@ -230,7 +231,7 @@ function initializePlay(){
         editButtonActive(pauseBtn, false);
         setAllGemActive(false);
         timerOn = false;
-        
+
         charm.scale(pauseContainer, 1.1, 1.1, 5).onComplete = () =>
         charm.scale(pauseContainer, 1, 1, 5).onComplete = () => {
            //console.log("Pause!") 
@@ -283,6 +284,7 @@ function initializePlay(){
            editButtonActive(quitBtn, false);
            charm.fadeOut(playScene, 30).onComplete = () => {
                playScene.visible = false;
+               allowScore = false;
                restartPlay();    
                state = title;
            }
@@ -957,10 +959,9 @@ function restartPlay() {
     
     gemContainer.splice(0, gemContainer.length);
     clickContainer.splice(0, clickContainer.length);
-    allowScore = false;
     timesUp = false;
     timerOn = false;
-    time = 60;
+    time = TIME_VALUE;
     timeVal.text = time;
 //    console.log("On restart: ");
 //    console.log(gemContainer);
@@ -997,6 +998,7 @@ function initializeEnd(){
             blackBackground.alpha = 0;
             playScene.visible = false;
             endScene.visible = false;
+            allowScore = false;
             restartPlay();
             state = title;
         };
