@@ -79,7 +79,7 @@ let endScene,
 
 //timer
 let currentScore = 0;
-let time = 60;
+let time = 999;
 let ctr = 0;
 let timerOn = false;
 let timesUp = false;
@@ -429,7 +429,8 @@ function findClusters() {
                 checkCluster = true;
             }
             
-            else if(gemContainer[x][y].gemType == gemContainer[x][y+1].gemType) {
+            else if(gemContainer[x][y].gemType == gemContainer[x][y+1].gemType &&
+                    gemContainer[x][y].gemType != -1) {
                     matchLength++;
             }
             else {
@@ -462,7 +463,8 @@ function findClusters() {
             if(x == BOARD_SIZE-1) {
                 checkCluster = true;
             }
-            else if (gemContainer[x][y].gemType == gemContainer[x+1][y].gemType) {
+            else if (gemContainer[x][y].gemType == gemContainer[x+1][y].gemType &&
+                    gemContainer[x][y].gemType != -1) {
                 matchLength++;
             }
             else {
@@ -525,7 +527,7 @@ function findMoves() {
 
     }
     
-    clusters = [];
+    //clusters = [];
 }
         
 function swap(x1,y1, x2,y2) {
@@ -536,13 +538,51 @@ function swap(x1,y1, x2,y2) {
     
 }
 
+function removeClusters() {
+    for(let i = 0; i < clusters.length; i++) {
+        let index;
+        let ctr = 0;
+        
+
+        if(clusters[i].horizontal) {
+            index = clusters[i].row;
+        }
+            
+        //vertical
+        else {
+            index = clusters[i].column;
+        }
+        
+        while(ctr != clusters[i].length) {
+            
+            if(clusters[i].horizontal) {
+                makeHole(index, clusters[i].column);
+            }
+            else {
+                makeHole(clusters[i].row, index);
+            }
+            
+            index++;
+            ctr++;
+        }
+        
+        
+
+    }
+    
+}
+
+function makeHole(x,y) {
+    gemContainer[x][y].gemType = -1;
+}
+
 function resolveClusters() {
 
     findClusters();
     
 //    while(clusters.length > 0) {
 //        
-//        removeClusters();
+        removeClusters();
 //        
 //        shiftTiles();
 //        
@@ -621,6 +661,7 @@ function generateGem(gemNum, x, y) {
     
     //set type
     gem.gemType = gemNum;
+    gem.shift = 0;
     gem.anchor.set(0.5,0.5);
     gem.position.set(x, y);
     gemOnClick(gem);
@@ -739,19 +780,19 @@ function swapGems(gem1, gem2) {
         swapGemInArray(gem1, gem1Coor[0], gem1Coor[1],
                        gem2, gem2Coor[0], gem2Coor[1]);
 
-        //printBoard();
+//        //printBoard();
+//        
+//        let count = 0;
+//        
+//        if(checkIfMatching(gem1, gem2Coor[0], gem2Coor[1])) {
+//            count++;   
+//        }
+//        
+//        if(checkIfMatching(gem2, gem1Coor[0], gem1Coor[1])) {
+//            count++;   
+//        }
         
-        let count = 0;
-        
-        if(checkIfMatching(gem1, gem2Coor[0], gem2Coor[1])) {
-            count++;   
-        }
-        
-        if(checkIfMatching(gem2, gem1Coor[0], gem1Coor[1])) {
-            count++;   
-        }
-        
-        if(count == 0) { //Revert.
+        if(/*count == 0*/true) { //Revert.
             charm.slide(gem1, gem1Orig[0], gem1Orig[1], 10).onComplete;
             charm.slide(gem2, gem2Orig[0], gem2Orig[1], 10).onComplete = () => {
                 returnToNormalScale();  
