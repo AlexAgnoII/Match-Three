@@ -357,7 +357,7 @@ function initializePlay(){
 
     
     //test
-    printBoard();
+   // printBoard();
     //test
 
     pauseContainer = new PIXI.Container();
@@ -633,13 +633,13 @@ function resolveClusters() {
             //if(gemContainer[x][y].y == 0) {
                 //gemContainer[x][y].position.set(x*gemSize, (BOARD_SIZE-1)*gemSize - (y*gemSize));
                 //board.addChild(gemContainer[x][y]);
-                console.log(lastGem);
+                //console.log(lastGem);
                 if(lastGem == gemContainer[x][y]) {
-                    console.log("LAST")
+                    //console.log("LAST")
                     charm.slide(gemContainer[x][y], x*gemSize, (BOARD_SIZE-1)*gemSize - (y*gemSize), 25).onComplete = () =>{
                         findClusters();
                         if(clusters.length >0) {
-                            console.log("Done!");
+                            //console.log("Done!");
                             resolveClusters();
                         }
                         else {
@@ -653,9 +653,9 @@ function resolveClusters() {
             //}
         }
     }
-    console.log("resolve");
-    console.log(board.height);
-    console.log(board.width);
+//    console.log("resolve");
+//    console.log(board.height);
+//    console.log(board.width);
     
 }
 
@@ -663,12 +663,12 @@ function checkIfYouCanHaveMove() {
     let done = false;
     findMoves();
     if(moves.length > 0) {
-            console.log("Done!");
+            //console.log("Done!");
             done = true;
     }
 //        
     else {
-        console.log("Oh no, reset!")
+        //console.log("Oh no, reset!")
         for(let x = 0; x < BOARD_SIZE; x++) {
              while(gemContainer[x].length > 0) {
                 board.removeChild(gemContainer[x][0]);
@@ -988,7 +988,7 @@ function end(){
 
 function initializeEnd(){
     let acionEndQuit = () => {//reseting required here
-        console.log("quit");
+        //console.log("quit");
         editButtonActive(endRestartBtn, false);
         editButtonActive(endQuitBtn, false);
         charm.slide(endGameContainer, endGameContainer.x, (gameHeight/2 + 15), 15).onComplete = () => 
