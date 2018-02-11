@@ -25,7 +25,7 @@ const ASSET_CONTAINER = "assets/container.png"
 const SPRITE_OFF_SET = 1000;
 const BOARD_SIZE = 8;
 const SCORE_DEFAULT = 100;
-const TIME_VALUE = 10;
+const TIME_VALUE = 60;
 
 let app = new PIXI.Application({ 
     width: 800, 
